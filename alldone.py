@@ -33,6 +33,23 @@ from multiprocessing import cpu_count
 
 
 
+#from utils import CameraWebsocketHandler
+#from utils.BiQuad import BiQuadFilter
+#from functools import partial
+#from PIL import Image
+#from scipy import ndimage
+#import edgetpu.classification.engine
+#import threading
+#import asyncio
+#import base64
+#import utils
+#import cv2
+#import argparse
+#import sys
+#import RPi.GPIO as GPIO
+
+
+
 def main():
     default_model_dir = '.'
     default_model = 'model.tflite'
@@ -50,7 +67,9 @@ def main():
     args = parser.parse_args()
 
     prediction = 'n.a.'
-
+    mean = [None]
+    sliding_window = []
+    filter_type = 'zone'
     # checking whether the training data is ready
 
     print ('training data is being created...')
@@ -72,14 +91,15 @@ def main():
         if not ret:
             break
         cv2_im = frame
+        height=640
+        if(is_good_photo(cv2_im, height, mean, sliding_window)):
+            cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
+            cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
+            run_inference(interpreter, cv2_im_rgb.tobytes())
+            objs = get_objects(interpreter, args.threshold)[:args.top_k]
+            cv2_im = append_objs_to_img(cv2_im, inference_size, objs, labels)
 
-        cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
-        cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
-        run_inference(interpreter, cv2_im_rgb.tobytes())
-        objs = get_objects(interpreter, args.threshold)[:args.top_k]
-        cv2_im = append_objs_to_img(cv2_im, inference_size, objs, labels)
-
-        cv2.imshow('frame', cv2_im)
+            cv2.imshow('frame', cv2_im)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
@@ -108,6 +128,35 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels):
         cv2_im = cv2.putText(cv2_im, prediction, (x0, y0+30),
                              cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 2)
     return cv2_im
+
+def is_good_photo(img, height, mean, sliding_window):
+    detection_zone_height = 20
+    detection_zone_interval = 5
+    threshold = 4.5
+   # if (filter_type == 'zone'):
+    detection_zone_avg = img[height // 2 : (height // 2) + detection_zone_height : detection_zone_interval, 0:-1:3].mean()
+ #   if (filter_type == 'biquad2d'):
+ #       detection_zone_avg = abs(bq.process(img.mean))
+ #   if (filter_type == 'biquad'):
+   #     detection_zone_avg = abs(bq.process(img[height // 2: (height // 2) + detection_zone_height: detection_zone_interval, 0:-1:3].mean()))
+  #  if (filter_type == 'center_of_mass'):
+   #     center = scipy.ndimage.measurements.center_of_mass(img)
+   #     detection_zone_avg = (center[0] + center[1]) / 2
+
+
+    if len(sliding_window) > 30:
+        mean[0] = np.mean(sliding_window)
+        sliding_window.clear()
+
+    else:
+        sliding_window.append(detection_zone_avg)
+    # print(detection_zone_avg)
+    if mean[0] != None and abs(detection_zone_avg - mean[0]) > threshold:
+        print("Target Detected Taking Picture")
+        return True
+
+    return False
+
 
 if __name__ == '__main__':
     main()

@@ -103,7 +103,7 @@ def main():
             cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
             run_inference(interpreter, cv2_im_rgb.tobytes())
             objs = get_objects(interpreter, args.threshold)[:args.top_k]
-            cv2_im = append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
+            cv2_im = append_objs_to_img(cv2_im, inference_size, objs, labels)
             cv2.imshow('frame', cv2_im)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
@@ -162,9 +162,7 @@ def is_good_photo(img, height, mean, sliding_window):
 def color2res(bands,colors,values):
     colors.reverse()
     flag=0
-    if bands == []:
-        pass
-    else:
+    if len(bands==4) or len(bands==5):
         if(bands[0]=="Gold"):
           bands.reverse()
           flag=1  

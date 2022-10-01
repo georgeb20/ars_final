@@ -84,4 +84,7 @@ def main(training_data, test_data):
         neighbors = kNearestNeighbors(training_feature_vector, test_feature_vector[x], k)
         result = responseOfNeighbors(neighbors)
         classifier_prediction.append(result)
-    return classifier_prediction[0]		
+    if(len(classifier_prediction)>0):
+        return classifier_prediction[0]
+    else:
+        return "unknown"	

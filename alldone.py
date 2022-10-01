@@ -162,7 +162,7 @@ def is_good_photo(img, height, mean, sliding_window):
 def color2res(bands,colors,values):
     colors.reverse()
     flag=0
-    if len(bands==4) or len(bands==5):
+    if len(bands)==4 or len(bands)==5:
         if(bands[0]=="Gold"):
           bands.reverse()
           flag=1  

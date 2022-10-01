@@ -1,4 +1,5 @@
 import argparse
+import colorsys
 import cv2
 import os
 
@@ -52,6 +53,7 @@ from scipy import ndimage
 
 
 def main():
+    
     default_model_dir = '.'
     default_model = 'model.tflite'
     default_labels = 'band-labels.txt'
@@ -66,6 +68,9 @@ def main():
     parser.add_argument('--threshold', type=float, default=0.1,
                         help='classifier score threshold')
     args = parser.parse_args()
+
+    colors_array = ["black","brown","red","orange","yellow","green","blue","violet","gold"]
+    values = [0,1,2,3,4,5,6,7,-1]
 
     prediction = 'n.a.'
     mean = [None]
@@ -99,7 +104,6 @@ def main():
             run_inference(interpreter, cv2_im_rgb.tobytes())
             objs = get_objects(interpreter, args.threshold)[:args.top_k]
             cv2_im = append_objs_to_img(cv2_im, inference_size, objs, labels)
-
             cv2.imshow('frame', cv2_im)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
@@ -107,9 +111,10 @@ def main():
     cap.release()
     cv2.destroyAllWindows()
 
-def append_objs_to_img(cv2_im, inference_size, objs, labels):
+def append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values):
     height, width, channels = cv2_im.shape
     scale_x, scale_y = width / inference_size[0], height / inference_size[1]
+    colors=[]
     for obj in objs:
         bbox = obj.bbox.scale(scale_x, scale_y)
 
@@ -128,6 +133,11 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels):
         cv2_im = cv2.rectangle(cv2_im, (x0, y0), (x1, y1), (0, 255, 0), 2)
         cv2_im = cv2.putText(cv2_im, prediction, (x0, y0+30),
                              cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 2)
+        colors.append(prediction)
+
+    resistance = color2res(colors,colors_array,values)
+    cv2_im = cv2.putText(cv2_im, str(resistance), (30, 30),
+                            cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 2)
     return cv2_im
 
 def is_good_photo(img, height, mean, sliding_window):
@@ -149,7 +159,23 @@ def is_good_photo(img, height, mean, sliding_window):
         return True
 
     return False
+def color2res(bands,colors,values):
+    colors.reverse()
+    flag=0
+    if bands == []:
+        pass
+    else:
+        if(bands[0]=="Gold"):
+          bands.reverse()
+          flag=1  
+        if(len(bands)==4):
+            resistance =  (values[colors.index(bands[0])]*10 + values[colors.index(bands[1])]) * pow(10,(values[colors.index(bands[2])]))
+        else:
+            resistance =  (values[colors.index(bands[0])]*100 + values[colors.index(bands[1])]*10+values[colors.index(bands[2])]) * pow(10,(values[colors.index(bands[2])]))
 
+        if flag==1:
+          bands.reverse()
+        return resistance
 
 if __name__ == '__main__':
     main()

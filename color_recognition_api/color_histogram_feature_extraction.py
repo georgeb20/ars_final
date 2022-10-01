@@ -6,7 +6,6 @@
 # --- Date           : 31st December 2017 - new year eve :)
 # ----------------------------------------------
 
-from msilib import datasizemask
 from PIL import Image
 import os
 import cv2

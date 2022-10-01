@@ -95,14 +95,15 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels):
     scale_x, scale_y = width / inference_size[0], height / inference_size[1]
     for obj in objs:
         bbox = obj.bbox.scale(scale_x, scale_y)
-        band_crop = cv2_im.crop(box=bbox)
-        opencvImage = np.array(band_crop)
-        color_histogram_feature_extraction.color_histogram_of_test_image(opencvImage)
-        prediction = knn_classifier.main('training.data', 'test.data')
+
 
         x0, y0 = int(bbox.xmin), int(bbox.ymin)
         x1, y1 = int(bbox.xmax), int(bbox.ymax)
-
+        
+        band_crop = cv2_im[x0:x1,y0,y1]
+        color_histogram_feature_extraction.color_histogram_of_test_image(band_crop)
+        prediction = knn_classifier.main('training.data', 'test.data')
+        
         percent = int(100 * obj.score)
         label = '{}% {}'.format(percent, labels.get(obj.id, obj.id))
 

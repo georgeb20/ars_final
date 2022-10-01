@@ -30,7 +30,7 @@ def main():
     labels = read_label_file(args.labels)
     inference_size = input_size(interpreter)
 
-    cap = cv2.VideoCapture(args.camera_idx)
+    cap = cv2.VideoCapture(1)
 
     while cap.isOpened():
         ret, frame = cap.read()

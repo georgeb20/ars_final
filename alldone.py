@@ -28,7 +28,7 @@ from color_recognition_api import color_histogram_feature_extraction
 from color_recognition_api import knn_classifier
 import cv2
 
-import matplotlib as plt
+
 from multiprocessing import cpu_count
 
 

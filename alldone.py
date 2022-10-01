@@ -31,6 +31,7 @@ import cv2
 
 from multiprocessing import cpu_count
 
+from scipy import ndimage
 
 
 #from utils import CameraWebsocketHandler
@@ -130,18 +131,10 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels):
     return cv2_im
 
 def is_good_photo(img, height, mean, sliding_window):
-    detection_zone_height = 20
-    detection_zone_interval = 5
     threshold = 4.5
-   # if (filter_type == 'zone'):
-    detection_zone_avg = img[height // 2 : (height // 2) + detection_zone_height : detection_zone_interval, 0:-1:3].mean()
- #   if (filter_type == 'biquad2d'):
- #       detection_zone_avg = abs(bq.process(img.mean))
- #   if (filter_type == 'biquad'):
-   #     detection_zone_avg = abs(bq.process(img[height // 2: (height // 2) + detection_zone_height: detection_zone_interval, 0:-1:3].mean()))
-  #  if (filter_type == 'center_of_mass'):
-   #     center = scipy.ndimage.measurements.center_of_mass(img)
-   #     detection_zone_avg = (center[0] + center[1]) / 2
+    center = ndimage.measurements.center_of_mass(img)
+    detection_zone_avg = (center[0] + center[1]) / 2
+
 
 
     if len(sliding_window) > 30:

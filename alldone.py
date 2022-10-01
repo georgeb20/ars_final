@@ -52,15 +52,11 @@ def main():
     prediction = 'n.a.'
 
     # checking whether the training data is ready
-    PATH = './training.data'
 
-    if os.path.isfile(PATH) and os.access(PATH, os.R_OK):
-        print ('training data is ready, classifier is loading...')
-    else:
-        print ('training data is being created...')
-        open('training.data', 'w')
-        color_histogram_feature_extraction.training()
-        print ('training data is ready, classifier is loading...')
+    print ('training data is being created...')
+    open('training.data', 'w')
+    color_histogram_feature_extraction.training()
+    print ('training data is ready, classifier is loading...')
 
 
     print('Loading {} with {} labels.'.format(args.model, args.labels))
@@ -101,6 +97,7 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels):
         x1, y1 = int(bbox.xmax), int(bbox.ymax)
         
         band_crop = cv2_im[x0:x1,y0:y1]
+        band_crop = cv2.cvtColor(np.array(band_crop), cv2.COLOR_RGB2BGR)
         color_histogram_feature_extraction.color_histogram_of_test_image(band_crop)
         prediction = knn_classifier.main('training.data', 'test.data')
         

@@ -135,7 +135,7 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
                              cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 2)
         colors.append(prediction)
 
-    resistance = color2res(colors,colors_array,values)
+    resistance = color2res2(colors,colors_array,values)
     cv2_im = cv2.putText(cv2_im, str(resistance), (30, 30),
                             cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 2)
     return cv2_im
@@ -174,6 +174,7 @@ def color2res(bands,colors,values):
         if flag==1:
           bands.reverse()
         return resistance
-
+def color2res2(bands,colors,values):
+    return 0
 if __name__ == '__main__':
     main()

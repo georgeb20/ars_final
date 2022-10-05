@@ -132,16 +132,16 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
         percent = int(100 * obj.score)
         label = '{}% {}'.format(percent, labels.get(obj.id, obj.id))
 
-        #cv2_im = cv2.rectangle(cv2_im, (x0, y0), (x1, y1), (0, 255, 0), 2)
-        #cv2_im = cv2.putText(cv2_im, prediction, (x0, y0+30),
-        #                     cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 2)
+        cv2_im = cv2.rectangle(cv2_im, (x0, y0), (x1, y1), (0, 255, 0), 2)
+        cv2_im = cv2.putText(cv2_im, prediction, (x0, y0+30),
+                             cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 2)
         colors.append(prediction)
         
     print(colors)
     resistance = color2res(colors,colors_array,values)
     cv2_im = cv2.putText(cv2_im, str(resistance), (30, 30),
                             cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 2)
-    return band_crop
+    return cv2_im
 
 def is_good_photo(img, height, mean, sliding_window):
     threshold = 4.5

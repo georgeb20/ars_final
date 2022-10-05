@@ -70,11 +70,10 @@ def color_histogram_of_training_image(img_name):
     elif 'gold' in img_name:
         data_source = 'gold'
     elif 'grey' in img_name:
-        data_source = 'gold'
+        data_source = 'grey'
     elif 'white' in img_name:
         data_source = 'white'
-    elif 'violet' in img_name:
-        data_source = 'violet'
+
 
     # load the image
     image = cv2.imread(img_name)

@@ -115,6 +115,7 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
     height, width, channels = cv2_im.shape
     scale_x, scale_y = width / inference_size[0], height / inference_size[1]
     colors=[]
+    crop_arr = []
     for obj in objs:
         bbox = obj.bbox.scale(scale_x, scale_y)
 
@@ -126,6 +127,7 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
         dy = y1-y0
 
         band_crop = cv2_im[y0:y0+dy,x0:x0+dx]
+        crop_arr.append(band_crop)
         color_histogram_feature_extraction.color_histogram_of_test_image(band_crop)
         prediction = knn_classifier.main('training.data', 'test.data')
         
@@ -141,7 +143,7 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
     resistance = color2res(colors,colors_array,values)
     cv2_im = cv2.putText(cv2_im, str(resistance), (30, 30),
                             cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 2)
-    return cv2_im
+    return crop_arr[0]
 
 def is_good_photo(img, height, mean, sliding_window):
     threshold = 4.5

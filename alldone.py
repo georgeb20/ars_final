@@ -101,11 +101,9 @@ def main():
         if(is_good_photo(cv2_im, height, mean, sliding_window)):
             cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
             cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
-            rgb = cv2.cvtColor(cv2_im,cv2.COLOR_BGR2RGB)
             run_inference(interpreter, cv2_im_rgb.tobytes())
             objs = get_objects(interpreter, args.threshold)[:args.top_k]
-            cv2_im = append_objs_to_img(rgb, inference_size, objs, labels,colors_array,values)
-            cv2_im = cv2.cvtColor(cv2_im,cv2.COLOR_RGB2BGR)
+            cv2_im = append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
             cv2.imshow('frame', cv2_im)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break

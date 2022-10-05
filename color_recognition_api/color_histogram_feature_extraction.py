@@ -10,7 +10,6 @@ from PIL import Image
 import os
 import cv2
 import numpy as np
-import matplotlib.pyplot as plt
 from color_recognition_api import knn_classifier as knn_classifier
 
 

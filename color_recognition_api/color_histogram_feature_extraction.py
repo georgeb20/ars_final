@@ -62,14 +62,14 @@ def color_histogram_of_training_image(img_name):
         data_source = 'black'
     elif 'blue' in img_name:
         data_source = 'blue'
-    elif 'violet' in img_name:
-        data_source = 'violet'
+    #elif 'violet' in img_name:
+     #   data_source = 'violet'
     elif 'gold' in img_name:
         data_source = 'gold'
    # elif 'grey' in img_name:
     #    data_source = 'grey'
-    #elif 'white' in img_name:
-     #   data_source = 'white'
+    elif 'white' in img_name:
+        data_source = 'white'
 
 
     # load the image
@@ -138,8 +138,8 @@ def training():
     #for f in os.listdir('./training_dataset/grey'):
      #   color_histogram_of_training_image('./training_dataset/grey/' + f)	
 
-    #for f in os.listdir('./training_dataset/white'):
-     #   color_histogram_of_training_image('./training_dataset/white/' + f)
+    for f in os.listdir('./training_dataset/white'):
+        color_histogram_of_training_image('./training_dataset/white/' + f)
 
-    for f in os.listdir('./training_dataset/violet'):
-        color_histogram_of_training_image('./training_dataset/violet/' + f)	
+    #for f in os.listdir('./training_dataset/violet'):
+     #   color_histogram_of_training_image('./training_dataset/violet/' + f)	

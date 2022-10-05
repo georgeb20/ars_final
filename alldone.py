@@ -104,7 +104,7 @@ def main():
         run_inference(interpreter, cv2_im_rgb.tobytes())
         objs = get_objects(interpreter, args.threshold)[:args.top_k]
         cv2_im = append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
-        img = cv2.hconcat(cv2_im[0],cv2_im[1],cv2_im[2],cv2_im[3])
+        img = cv2.hconcat(cv2_im[0],cv2_im[3])
         cv2.imshow('frame', img)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break

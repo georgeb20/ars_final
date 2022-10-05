@@ -104,7 +104,7 @@ def main():
         run_inference(interpreter, cv2_im_rgb.tobytes())
         objs = get_objects(interpreter, args.threshold)[:args.top_k]
         cv2_im = append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
-        cv2.imshow('frame', cv2_im)
+       # cv2.imshow('frame', cv2_im)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
 
@@ -123,6 +123,7 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
         x1, y1 = int(bbox.xmax), int(bbox.ymax)
         
         band_crop = cv2_im[x0:x1,y0:y1]
+        cv2.imshow('frame',band_crop)
         color_histogram_feature_extraction.color_histogram_of_test_image(band_crop)
         prediction = knn_classifier.main('training.data', 'test.data')
         

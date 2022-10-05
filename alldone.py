@@ -121,8 +121,8 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
 
         x0, y0 = int(bbox.xmin), int(bbox.ymin)
         x1, y1 = int(bbox.xmax), int(bbox.ymax)
-        print(x0,y0,x1,y1)
         band_crop = cv2_im[x0:x1,y0:y1]
+        band_crop = cv2.cvtColor(band_crop, cv2.COLOR_BGR2RGB)
         color_histogram_feature_extraction.color_histogram_of_test_image(band_crop)
         prediction = knn_classifier.main('training.data', 'test.data')
         

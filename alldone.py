@@ -162,7 +162,7 @@ def is_good_photo(img, height, mean, sliding_window):
 
     return False
 def color2res(bands,colors,values):
-    if bands in "unknown":
+    if "unknown" in bands:
         return 0
     colors.reverse()
     flag=0

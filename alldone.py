@@ -55,7 +55,7 @@ from scipy import ndimage
 def main():
     
     default_model_dir = '.'
-    default_model = 'model.tflite'
+    default_model = 'model2.tflite'
     default_labels = 'band-labels.txt'
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', help='.tflite model path',

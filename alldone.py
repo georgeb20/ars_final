@@ -69,8 +69,8 @@ def main():
                         help='classifier score threshold')
     args = parser.parse_args()
 
-    colors_array = ["black","brown","red","orange","yellow","green","blue","violet","gold"]
-    values = [0,1,2,3,4,5,6,7,-1]
+    colors_array = ["black","brown","red","orange","yellow","green","blue","violet","grey","white","gold"]
+    values = [0,1,2,3,4,5,6,7,8,9,-1]
 
     prediction = 'n.a.'
     mean = [None]
@@ -101,9 +101,10 @@ def main():
         if(is_good_photo(cv2_im, height, mean, sliding_window)):
             cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
             cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
+            rgb = cv2.cvtColor(cv2_im,cv2.COLOR_BGR2RGB)
             run_inference(interpreter, cv2_im_rgb.tobytes())
             objs = get_objects(interpreter, args.threshold)[:args.top_k]
-            cv2_im = append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
+            cv2_im = append_objs_to_img(rgb, inference_size, objs, labels,colors_array,values)
             cv2.imshow('frame', cv2_im)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
@@ -123,7 +124,7 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
         x1, y1 = int(bbox.xmax), int(bbox.ymax)
         
         band_crop = cv2_im[x0:x1,y0:y1]
-        band_crop = cv2.cvtColor(np.array(band_crop), cv2.COLOR_RGB2BGR)
+        band_crop = np.array(band_crop)
         color_histogram_feature_extraction.color_histogram_of_test_image(band_crop)
         prediction = knn_classifier.main('training.data', 'test.data')
         
@@ -163,7 +164,7 @@ def color2res(bands,colors,values):
     colors.reverse()
     flag=0
     if len(bands)==4 or len(bands)==5:
-        if(bands[0]=="Gold"):
+        if(bands[0]=="gold"):
           bands.reverse()
           flag=1  
         if(len(bands)==4):

@@ -6,11 +6,12 @@
 # --- Date           : 31st December 2017 - new year eve :)
 # ----------------------------------------------
 
-
+from msilib import datasizemask
+from PIL import Image
 import os
 import cv2
 import numpy as np
-
+import matplotlib.pyplot as plt
 from scipy.stats import itemfreq
 from color_recognition_api import knn_classifier as knn_classifier
 
@@ -68,6 +69,12 @@ def color_histogram_of_training_image(img_name):
         data_source = 'violet'
     elif 'gold' in img_name:
         data_source = 'gold'
+    elif 'grey' in img_name:
+        data_source = 'gold'
+    elif 'white' in img_name:
+        data_source = 'white'
+    elif 'violet' in img_name:
+        data_source = 'violet'
 
     # load the image
     image = cv2.imread(img_name)
@@ -130,4 +137,13 @@ def training():
 
     # gold color training images
     for f in os.listdir('./training_dataset/gold'):
-        color_histogram_of_training_image('./training_dataset/gold/' + f)		
+        color_histogram_of_training_image('./training_dataset/gold/' + f)
+        
+    for f in os.listdir('./training_dataset/grey'):
+        color_histogram_of_training_image('./training_dataset/grey/' + f)	
+
+    for f in os.listdir('./training_dataset/white'):
+        color_histogram_of_training_image('./training_dataset/white/' + f)
+
+    for f in os.listdir('./training_dataset/violet'):
+        color_histogram_of_training_image('./training_dataset/violet/' + f)	

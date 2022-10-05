@@ -10,7 +10,6 @@ import csv
 import random
 import math
 import operator
-import cv2
 
 
 # calculation of euclidead distance

@@ -105,6 +105,7 @@ def main():
             run_inference(interpreter, cv2_im_rgb.tobytes())
             objs = get_objects(interpreter, args.threshold)[:args.top_k]
             cv2_im = append_objs_to_img(rgb, inference_size, objs, labels,colors_array,values)
+            cv2_im = cv2.cvtColor(cv2_im,cv2.COLOR_RGB2BGR)
             cv2.imshow('frame', cv2_im)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break

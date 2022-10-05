@@ -143,7 +143,7 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
     resistance = color2res(colors,colors_array,values)
     cv2_im = cv2.putText(cv2_im, str(resistance), (30, 30),
                             cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 2)
-    return crop_arr[0]
+    return crop_arr[1]
 
 def is_good_photo(img, height, mean, sliding_window):
     threshold = 4.5

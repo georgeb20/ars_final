@@ -56,7 +56,7 @@ def main():
     
     default_model_dir = '.'
     default_model = 'model2.tflite'
-    default_labels = 'band-labels.txt'
+    default_labels = 'labels.txt'
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', help='.tflite model path',
                         default=os.path.join(default_model_dir,default_model))

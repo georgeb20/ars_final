@@ -55,7 +55,7 @@ from scipy import ndimage
 def main():
     
     default_model_dir = '.'
-    default_model = 'model2.tflite'
+    default_model = 'model3.tflite'
     default_labels = 'labels.txt'
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', help='.tflite model path',
@@ -140,6 +140,7 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
     resistance = color2res(colors,colors_array,values)
     cv2_im = cv2.putText(cv2_im, str(resistance), (30, 30),
                             cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 2)
+    print(colors)
     return cv2_im
 
 def is_good_photo(img, height, mean, sliding_window):

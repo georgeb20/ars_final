@@ -55,7 +55,7 @@ from scipy import ndimage
 def main():
     
     default_model_dir = '.'
-    default_model = 'model3.tflite'
+    default_model = 'ssd2.tflite'
     default_labels = 'labels.txt'
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', help='.tflite model path',

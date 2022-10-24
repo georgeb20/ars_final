@@ -12,7 +12,6 @@ from color_recognition_api import knn_classifier
 import os
 import os.path
 import sys
-import matplotlib.pyplot as plt
 # read the test image
 try:
     source_image = cv2.imread(sys.argv[1])

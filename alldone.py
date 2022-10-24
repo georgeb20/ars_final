@@ -29,7 +29,7 @@ from color_recognition_api import color_histogram_feature_extraction
 from color_recognition_api import knn_classifier
 import cv2
 
-
+import time
 from multiprocessing import cpu_count
 
 from scipy import ndimage
@@ -133,7 +133,7 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
         label = '{}% {}'.format(percent, labels.get(obj.id, obj.id))
 
         cv2_im = cv2.rectangle(cv2_im, (x0, y0), (x1, y1), (0, 255, 0), 2)
-        cv2_im = cv2.putText(cv2_im, prediction, (x0, y0+30),
+        cv2_im = cv2.putText(cv2_im, prediction, (x1, y1+30),
                              cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 2)
         colors.append(prediction)
         

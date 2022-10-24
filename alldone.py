@@ -115,6 +115,7 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
     height, width, channels = cv2_im.shape
     scale_x, scale_y = width / inference_size[0], height / inference_size[1]
     colors=[]
+    s=30
     for obj in objs:
         bbox = obj.bbox.scale(scale_x, scale_y)
 
@@ -133,9 +134,10 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
         label = '{}% {}'.format(percent, labels.get(obj.id, obj.id))
 
         cv2_im = cv2.rectangle(cv2_im, (x0, y0), (x1, y1), (0, 255, 0), 2)
-        cv2_im = cv2.putText(cv2_im, prediction, (x0, y0),
+        cv2_im = cv2.putText(cv2_im, prediction, (s, 30),
                              cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 2)
         colors.append(prediction)
+        s=s+100
         
     resistance = color2res(colors,colors_array,values)
     cv2_im = cv2.putText(cv2_im, str(resistance), (30, 30),

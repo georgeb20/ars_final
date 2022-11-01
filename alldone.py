@@ -33,6 +33,7 @@ import time
 from multiprocessing import cpu_count
 
 from scipy import ndimage
+from periphery import Serial
 
 
 #from utils import CameraWebsocketHandler
@@ -51,6 +52,7 @@ from scipy import ndimage
 #import RPi.GPIO as GPIO
 
 
+serial = Serial("/dev/ttymxc2", 9600)
 
 def main():
     
@@ -108,10 +110,17 @@ def main():
         cv2.imshow('frame', cv2_im)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-
+    serial.close()
     cap.release()
     cv2.destroyAllWindows()
+    
 
+def resistance2array(resistance):
+    string_res = str(resistance)
+    first_digit = string_res[0]
+    second_digit = string_res[1]
+    num_zeros = str(len(string_res[2:]))
+    return [first_digit,second_digit,num_zeros]
 def append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values):
     height, width, channels = cv2_im.shape
     scale_x, scale_y = width / inference_size[0], height / inference_size[1]
@@ -141,6 +150,10 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
         s=s+100
         
     resistance = color2res(colors,colors_array,values)
+    resistance_array = resistance2array(resistance)
+    for i in resistance_array:
+        serial.write(i)
+
     cv2_im = cv2.putText(cv2_im, str(resistance), (30, 30),
                             cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 2)
     print(colors)

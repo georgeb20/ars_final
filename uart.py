@@ -1,7 +1,7 @@
 from periphery import Serial
 
 # Open /dev/ttyUSB0 with baudrate 115200, and defaults of 8N1, no flow control
-uart1 = Serial("/dev/ttymxc0", 115200)
+serial = Serial("/dev/ttymxc2", 9600)
 
 serial.write(b"Hello World!")
 

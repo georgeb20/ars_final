@@ -152,7 +152,7 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
         
     resistance = color2res(colors,colors_array,values)
     resistance_array = resistance2array(resistance)
-    serial.write(bytes(resistance_array,'utf-8'))
+    #serial.write(bytes(resistance_array,'utf-8'))
 
 
     cv2_im = cv2.putText(cv2_im, str(resistance), (30, 30),

@@ -7,7 +7,7 @@ def resistance2array(resistance):
     num_zeros = str(len(string_res[2:]))
     return first_digit+second_digit+num_zeros
 
-serial = Serial("/dev/ttymxc2", 9600)
+serial = Serial("/dev/ttymxc2", 101)
 
 
 resistance_array = resistance2array(2200)

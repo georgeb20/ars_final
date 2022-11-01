@@ -11,7 +11,7 @@ serial = Serial("/dev/ttymxc2", 9600)
 
 
 resistance_array = resistance2array(2200)
-serial.write(resistance2array)
+serial.write(bytes(resistance_array))
 # Open /dev/ttyUSB0 with baudrate 115200, and defaults of 8N1, no flow control
 
 

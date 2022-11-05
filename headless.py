@@ -75,6 +75,7 @@ def main():
             run_inference(interpreter, cv2_im_rgb.tobytes())
             objs = get_objects(interpreter, args.threshold)
             if(len(objs)>0):
+                print("led on")
                 led.write(True)
             else:
                 led.write(False)
@@ -113,10 +114,10 @@ def append_objs_to_img(cv2_im, inference_size, objs,colors_array,values):
         colors.append(prediction)
         
     resistance = color2res(colors,colors_array,values)
-    print(resistance)
+    #print(resistance)
     #resistance_array = resistance2array(resistance)
     #serial.write(bytes(resistance_array,'utf-8'))
-    print(colors)
+  #  print(colors)
 
 def is_good_photo(img, height, mean, sliding_window):
     threshold = 4.5

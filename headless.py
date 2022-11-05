@@ -62,7 +62,7 @@ def main():
     inference_size = input_size(interpreter)
 
     cap = cv2.VideoCapture(args.camera_idx)
-
+    print('hi')
     while cap.isOpened():
         ret, frame = cap.read()
         if not ret:

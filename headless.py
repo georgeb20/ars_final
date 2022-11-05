@@ -69,18 +69,17 @@ def main():
             break
         cv2_im = frame
         height=640
-       # if(is_good_photo(cv2_im, height, mean, sliding_window)):
-        cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
-        cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
-        run_inference(interpreter, cv2_im_rgb.tobytes())
-        objs = get_objects(interpreter, args.threshold)
-        if(len(objs)>0):
+        if(is_good_photo(cv2_im, height, mean, sliding_window)):
             print("led on")
             led.write(True)
-        else:
-            led.write(False)
+            cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
+            cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
+            run_inference(interpreter, cv2_im_rgb.tobytes())
+            objs = get_objects(interpreter, args.threshold)
+            append_objs_to_img(cv2_im, inference_size, objs,colors_array,values)
 
-        append_objs_to_img(cv2_im, inference_size, objs,colors_array,values)
+        led.write(False)
+
     led.close()
     serial.close()
     cap.release()

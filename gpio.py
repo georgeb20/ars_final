@@ -1,6 +1,6 @@
 from periphery import GPIO
 
-gpio = GPIO("/sys/class/gpio/gpio77", 13, "out")
+gpio = GPIO("/dev/gpiochip2", 13, "out")
 
 try:
   while True:

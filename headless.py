@@ -14,12 +14,14 @@ import numpy as np
 
 from scipy import ndimage
 from periphery import Serial
+from periphery import GPIO
 
 
 
 
 
 serial = Serial("/dev/ttymxc2", 9600)
+led = GPIO("/dev/gpiochip2", 13, "out")
 
 def main():
     
@@ -72,8 +74,13 @@ def main():
             cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
             run_inference(interpreter, cv2_im_rgb.tobytes())
             objs = get_objects(interpreter, args.threshold)
-            append_objs_to_img(cv2_im, inference_size, objs,colors_array,values)
+            if(len(objs)>0):
+                led.write(True)
+            else:
+                led.write(False)
 
+            append_objs_to_img(cv2_im, inference_size, objs,colors_array,values)
+    led.close()
     serial.close()
     cap.release()
     cv2.destroyAllWindows()

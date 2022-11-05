@@ -1,11 +1,6 @@
 from periphery import GPIO
 
-led = GPIO("/dev/gpiochip0", 6, "out")  # pin 37
+led = GPIO("/dev/gpiochip2", 13, "out")  # pin 37
 
-try:
-  while True:
+while True:
     led.write(True)
-finally:
-  led.write(False)
-  led.close()
-  button.close()

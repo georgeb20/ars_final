@@ -1,6 +1,6 @@
 from periphery import GPIO
 
-button = GPIO("/dev/gpiochip4", 13, "in")  # pin 36
+button = GPIO("/dev/gpiochip4", 13, "out")  # pin 36
 
 try:
   while True:

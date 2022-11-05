@@ -1,10 +1,10 @@
 from periphery import GPIO
 
-led = GPIO("/dev/gpiochip2", 13, "out")  # pin 37
+gpio_p16 = GPIO("/dev/gpiochip2", 9, "out")
 
 try:
   while True:
-    led.write(True)
+    gpio_p16.write(True)
 finally:
-  led.write(False)
-  led.close()
+  gpio_p16.write(False)
+  gpio_p16.close()

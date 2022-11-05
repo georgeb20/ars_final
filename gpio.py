@@ -1,10 +1,13 @@
 from periphery import GPIO
-
-led = GPIO("/dev/gpiochip2", 13, "out")  # pin 37
+import time
+solenoid = GPIO("/dev/gpiochip2", 13, "out")  # pin 37
 
 try:
   while True:
-    led.write(True)
+    solenoid.write(True)
+    time.sleep(1)
+    solenoid.write(False)
+    time.sleep(1)
 finally:
-  led.write(False)
-  led.close()
+  solenoid.write(False)
+  solenoid.close()

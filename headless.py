@@ -16,6 +16,7 @@ from scipy import ndimage
 from periphery import Serial
 from periphery import GPIO
 
+from skimage.metrics import structural_similarity as compare_ssim
 
 
 
@@ -65,22 +66,20 @@ def main():
     print('hi')
     while cap.isOpened():
         ret, frame = cap.read()
+        ret, frame2 = cap.read()
         if not ret:
             break
-        cv2_im = frame
-        height=640
-    #    if(is_good_photo(cv2_im, height, mean, sliding_window)):
-        cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
-        cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
-        run_inference(interpreter, cv2_im_rgb.tobytes())
-        objs = get_objects(interpreter, args.threshold)
-        if(len(objs)>0):
-            print("led on")
+
+        grayA = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        grayB = cv2.cvtColor(frame2, cv2.COLOR_BGR2GRAY)
+        (score, diff) = compare_ssim(grayA, grayB, full=True)
+        diff = (diff * 255).astype("uint8")
+        if(score<.90):
             led.write(True)
         else:
             led.write(False)
 
-        append_objs_to_img(cv2_im, inference_size, objs,colors_array,values)
+
     led.close()
     serial.close()
     cap.release()

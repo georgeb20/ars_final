@@ -37,10 +37,8 @@ sliding_window = []
 cap = cv2.VideoCapture(1)
 while cap.isOpened():
     ret,frame = cap.read()
-    print(0)
     if(is_good_photo(frame,640,mean,sliding_window)):
         sleep(3)
-        print(1)
 
 
 

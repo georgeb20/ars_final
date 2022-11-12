@@ -3,7 +3,7 @@ from scipy import ndimage
 import numpy as np
 import scipy
 from time import sleep
-filter_type = 'zone'
+filter_type = 'center_of_mass'
 def is_good_photo(img, width, height, mean, sliding_window):
     detection_zone_height = 20
     detection_zone_interval = 5
@@ -22,10 +22,12 @@ def is_good_photo(img, width, height, mean, sliding_window):
     if len(sliding_window) > 30:
         mean[0] = np.mean(sliding_window)
         sliding_window.clear()
+        print("Clear")
 
     else:
         sliding_window.append(detection_zone_avg)
     # print(detection_zone_avg)
+    print(abs(detection_zone_avg-mean[0]))
     if mean[0] != None and abs(detection_zone_avg - mean[0]) > threshold:
         print("Target Detected Taking Picture")
         return True

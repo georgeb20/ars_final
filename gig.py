@@ -41,6 +41,7 @@ while cap.isOpened():
     height,width,channel = frame.shape
     if(is_good_photo(frame,width,height,mean,sliding_window)):
         sleep(5)
+        print("Awake")
 
 
 

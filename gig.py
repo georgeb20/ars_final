@@ -19,13 +19,13 @@ def is_good_photo(img, height, mean, sliding_window):
 
 
     if len(sliding_window) > 30:
-        if(mean[0]!=None):
-            a=1
-        else:
-            mean[0] = np.mean(sliding_window)
+        mean[0] = np.mean(sliding_window)
+        print(mean[0])
+        sliding_window.clear()
+
     else:
         sliding_window.append(detection_zone_avg)
-
+        
     if mean[0] != None and abs(detection_zone_avg - mean[0]) > threshold:
         print("Target Detected Taking Picture")
         return True
@@ -41,6 +41,7 @@ cap = cv2.VideoCapture(1)
 while cap.isOpened():
     ret,frame = cap.read()
     if(is_good_photo(frame,640,mean,sliding_window)):
+        sleep(3)
         print(count)
         count+=1
 

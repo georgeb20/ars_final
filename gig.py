@@ -27,8 +27,9 @@ def is_good_photo(img, width, height, mean, sliding_window):
     else:
         sliding_window.append(detection_zone_avg)
     # print(detection_zone_avg)
-    print(abs(detection_zone_avg-mean[0]))
     if mean[0] != None and abs(detection_zone_avg - mean[0]) > threshold:
+        print(abs(detection_zone_avg-mean[0]))
+
         print("Target Detected Taking Picture")
         return True
 

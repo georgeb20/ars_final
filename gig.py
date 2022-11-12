@@ -4,7 +4,7 @@ import numpy as np
 from time import sleep
 filter_type = 'zone'
 def is_good_photo(img, height, mean, sliding_window):
-    detection_zone_height = 20
+    detection_zone_height = 200
     detection_zone_interval = 5
     threshold = 9
     if (filter_type == 'zone'):

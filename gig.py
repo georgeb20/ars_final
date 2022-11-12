@@ -2,6 +2,7 @@ import cv2
 from scipy import ndimage
 import numpy as np
 import scipy
+from time import sleep
 filter_type = 'zone'
 def is_good_photo(img, width, height, mean, sliding_window):
     detection_zone_height = 20
@@ -39,7 +40,7 @@ while cap.isOpened():
     ret,frame = cap.read()
     height,width,channel = frame.shape
     if(is_good_photo(frame,width,height,mean,sliding_window)):
-        print(1)
+        sleep(5)
 
 
 

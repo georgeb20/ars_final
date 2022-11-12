@@ -34,7 +34,7 @@ def is_good_photo(img, width, height, mean, sliding_window):
 
 mean = [None]
 sliding_window = []
-cap = cv2.VideoCapture(0)
+cap = cv2.VideoCapture(1)
 while cap.isOpened():
     ret,frame = cap.read()
     height,width,channel = frame.shape

@@ -6,7 +6,7 @@ filter_type = 'zone'
 def is_good_photo(img, height, mean, sliding_window):
     detection_zone_height = 20
     detection_zone_interval = 5
-    threshold = 9
+    threshold = 20
     if (filter_type == 'zone'):
         detection_zone_avg = img[height // 2 : (height // 2) + detection_zone_height : detection_zone_interval, 0:-1:3].mean()
     if (filter_type == 'biquad2d'):
@@ -20,13 +20,11 @@ def is_good_photo(img, height, mean, sliding_window):
 
     if len(sliding_window) > 30:
         mean[0] = np.mean(sliding_window)
-        print(mean[0])
-
+        sliding_window.clear()
 
     else:
-        if(sliding_window<30):
-            sliding_window.append(detection_zone_avg)
-        
+        sliding_window.append(detection_zone_avg)
+    # print(detection_zone_avg)
     if mean[0] != None and abs(detection_zone_avg - mean[0]) > threshold:
         print("Target Detected Taking Picture")
         return True

@@ -40,6 +40,7 @@ cap = cv2.VideoCapture(1)
 while cap.isOpened():
     ret,frame = cap.read()
     if(is_good_photo(frame,640,mean,sliding_window)):
+        sleep(3)
         print(count)
         count+=1
 

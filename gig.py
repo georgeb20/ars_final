@@ -4,7 +4,6 @@ import numpy as np
 import scipy
 from time import sleep
 filter_type = 'center_of_mass'
-first_clear = 0
 
 def is_good_photo(img, width, height, mean, sliding_window):
     detection_zone_height = 20
@@ -20,15 +19,15 @@ def is_good_photo(img, width, height, mean, sliding_window):
         center = scipy.ndimage.measurements.center_of_mass(img)
         detection_zone_avg = (center[0] + center[1]) / 2
 
+    
+    if len(sliding_window) > 30:
+        if(mean[0]!=None):
+            return
+        mean[0] = np.mean(sliding_window)
+        print("Done setting up")
+    else:
+        sliding_window.append(detection_zone_avg)
 
-    if(first_clear==0):
-        if len(sliding_window) > 30:
-            mean[0] = np.mean(sliding_window)
-            sliding_window.clear()
-            first_clear = 1
-            print("Done setting up")
-        else:
-            sliding_window.append(detection_zone_avg)
     if mean[0] != None and abs(detection_zone_avg - mean[0]) > threshold:
         print(abs(detection_zone_avg-mean[0]))
 

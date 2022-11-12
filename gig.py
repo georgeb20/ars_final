@@ -34,9 +34,10 @@ def is_good_photo(img, height, mean, sliding_window):
 
 mean = [None]
 sliding_window = []
+count=0
+
 cap = cv2.VideoCapture(1)
 while cap.isOpened():
-    count=0
     ret,frame = cap.read()
     if(is_good_photo(frame,640,mean,sliding_window)):
         print(count)

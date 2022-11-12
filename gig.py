@@ -3,7 +3,7 @@ from scipy import ndimage
 import numpy as np
 import scipy
 from time import sleep
-filter_type = 'center_of_mass'
+filter_type = 'zone'
 
 def is_good_photo(img, width, height, mean, sliding_window):
     detection_zone_height = 20

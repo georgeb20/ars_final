@@ -75,6 +75,7 @@ def main():
             print("Started recording.")
             led.write(True)
             sleep(3)
+            led.write(False)
             res_mean = []
             while(True):
                 ret, frame = cap.read()
@@ -83,6 +84,7 @@ def main():
                 if(result<.5):
                     res_mean.append(result)
                     if(len(res_mean)==5):
+                        print("hit 5")
                         break
                 else:
                     res_mean=[]

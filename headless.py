@@ -15,7 +15,7 @@ import numpy as np
 from scipy import ndimage
 from periphery import Serial
 from periphery import GPIO
-
+from time import sleep
 from skimage.metrics import structural_similarity as compare_ssim
 
 
@@ -63,21 +63,22 @@ def main():
     inference_size = input_size(interpreter)
 
     cap = cv2.VideoCapture(args.camera_idx)
+    last_mean = 0
     print('hi')
     while cap.isOpened():
         ret, frame = cap.read()
-        ret, frame2 = cap.read()
-        if not ret:
-            break
-
-        grayA = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        grayB = cv2.cvtColor(frame2, cv2.COLOR_BGR2GRAY)
-        (score, diff) = compare_ssim(grayA, grayB, full=True)
-        diff = (diff * 255).astype("uint8")
-        if(score<.90):
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        result = np.abs(np.mean(gray) - last_mean)
+        if result > 1:
+            print(result)
+            print("Motion detected!")
+            print("Started recording.")
             led.write(True)
+            sleep(3)
         else:
             led.write(False)
+        last_mean= np.mean(gray)
+
 
 
     led.close()

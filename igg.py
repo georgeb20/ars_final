@@ -4,12 +4,8 @@ from time import sleep
 from periphery import GPIO
 
 cap = cv2.VideoCapture(1)
-
+last_mean = 0
 led = GPIO("/dev/gpiochip2", 13, "out")
-ret,frame = cap.read()  
-first_gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-first_mean = np.abs(np.mean(first_gray))
-last_mean = first_mean
 while(True):
     ret, frame = cap.read()
     cv2.imshow('frame',frame)
@@ -21,7 +17,6 @@ while(True):
         print("Started recording.")
         led.write(True)
         sleep(2)
-        last_mean = first_mean
     else:
         led.write(False)
     last_mean= np.mean(gray)

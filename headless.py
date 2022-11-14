@@ -71,7 +71,7 @@ def main():
         result = np.abs(np.mean(gray) - last_mean)
         print(result)
 
-        if result > .8:
+        if result > 1:
             print(result)
             print("Motion detected!")
             print("Started recording.")

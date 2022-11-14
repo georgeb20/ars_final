@@ -76,20 +76,16 @@ def main():
             print("Started recording.")
             led.write(True)
             sleep(3)
-            led.write(False)
             res_mean = []
             last_mean=0
             while(True):
                 ret, frame = cap.read()
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 result = np.abs(np.mean(gray) - last_mean) 
-               # print(result)
-                print(len(res_mean))
-                print('x')
                 if(result<1.3):
                     res_mean.append(result)
                     if(len(res_mean)==5):
-                        print("hit 5")
+                        led.write(False)
                         break
                 else:
                     res_mean=[]

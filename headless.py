@@ -62,6 +62,8 @@ def main():
     inference_size = input_size(interpreter)
 
     cap = cv2.VideoCapture(args.camera_idx)
+    cap.set(cv2.CAP_PROP_AUTOFOCUS, 0) # turn the autofocus off
+
     last_mean = 0
     print('hi')
     while cap.isOpened():

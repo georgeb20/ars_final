@@ -73,7 +73,12 @@ def main():
             print("Motion detected!")
             print("Started recording.")
             led.write(True)
-            sleep(3)
+            sleep(5)
+            count=0
+            while(count<200):
+                ret, frame = cap.read()
+                count=count+1
+
         else:
             led.write(False)
         last_mean= np.mean(gray)

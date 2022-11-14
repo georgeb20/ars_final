@@ -85,6 +85,7 @@ def main():
                 result = np.abs(np.mean(gray) - last_mean) 
                # print(result)
                 print(len(res_mean))
+                print('x')
                 if(result<1.3):
                     res_mean.append(result)
                     if(len(res_mean)==5):

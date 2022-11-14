@@ -4,9 +4,9 @@ import numpy as np
 from time import sleep
 filter_type = 'zone'
 def is_good_photo(img, height, mean, sliding_window):
-    detection_zone_height = 200
+    detection_zone_height = 20
     detection_zone_interval = 5
-    threshold = 4.5
+    threshold = 9
     if (filter_type == 'zone'):
         detection_zone_avg = img[height // 2 : (height // 2) + detection_zone_height : detection_zone_interval, 0:-1:3].mean()
     if (filter_type == 'biquad2d'):

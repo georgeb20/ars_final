@@ -17,6 +17,7 @@ while(True):
         print("Started recording.")
         led.write(True)
         sleep(2)
+        last_mean = 0
     else:
         led.write(False)
     last_mean= np.mean(gray)

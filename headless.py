@@ -69,6 +69,7 @@ def main():
         ret, frame = cap.read()
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         result = np.abs(np.mean(gray) - last_mean)
+        print(result)
         if result > 1.3:
             print(result)
             print("Motion detected!")
@@ -77,20 +78,19 @@ def main():
             sleep(3)
             led.write(False)
             res_mean = []
-            while(True):
-                ret, frame = cap.read()
-                gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-                result = np.abs(np.mean(gray) - last_mean) 
-                print(result)
-                if(result<1.3):
-                    res_mean.append(result)
-                    if(len(res_mean)==5):
-                        print("hit 5")
-                        break
-                else:
-                    res_mean=[]
-                last_mean = result
-            sleep(10)
+            # while(True):
+            #     ret, frame = cap.read()
+            #     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+            #     result = np.abs(np.mean(gray) - last_mean) 
+            #     print(result)
+            #     if(result<1.3):
+            #         res_mean.append(result)
+            #         if(len(res_mean)==5):
+            #             print("hit 5")
+            #             break
+            #     else:
+            #         res_mean=[]
+            #     last_mean = result
 
 
         else:

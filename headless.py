@@ -81,7 +81,7 @@ def main():
                 ret, frame = cap.read()
                 gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
                 result = np.abs(np.mean(gray) - last_mean) 
-                if(result<.5):
+                if(result<1.3):
                     res_mean.append(result)
                     if(len(res_mean)==5):
                         print("hit 5")

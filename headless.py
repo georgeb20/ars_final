@@ -99,7 +99,7 @@ def main():
         last_mean= np.mean(gray)
 
 
-
+    led.write(False)
     led.close()
     serial.close()
     cap.release()

@@ -17,8 +17,6 @@ while(True):
         print("Started recording.")
         led.write(True)
         sleep(2)
-    else:
-        led.write(False)
     last_mean= np.mean(gray)
     if (cv2.waitKey(1) & 0xFF == ord('q')):
         break

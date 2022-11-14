@@ -62,7 +62,6 @@ def main():
     inference_size = input_size(interpreter)
 
     cap = cv2.VideoCapture(args.camera_idx)
-    cap.set(cv2.CAP_PROP_AUTOFOCUS, 0) # turn the autofocus off
 
     last_mean = 0
     print('hi')
@@ -75,6 +74,18 @@ def main():
             print("Motion detected!")
             print("Started recording.")
             led.write(True)
+            sleep(3)
+            res_mean = []
+            while(True):
+                ret, frame = cap.read()
+                gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+                result = np.abs(np.mean(gray) - last_mean) 
+                if(result<.5):
+                    res_mean.append(result)
+                    if(len(res_mean)==5):
+                        break
+                else:
+                    res_mean=[]
             sleep(10)
 
 

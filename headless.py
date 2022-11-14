@@ -22,7 +22,7 @@ from time import sleep
 
 serial = Serial("/dev/ttymxc2", 9600)
 led = GPIO("/dev/gpiochip2", 13, "out")
-
+led.write(True)
 def main():
     
     default_model_dir = '.'
@@ -70,11 +70,12 @@ def main():
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         result = np.abs(np.mean(gray) - last_mean)
         print(result)
+
         if result > 1.3:
             print(result)
             print("Motion detected!")
             print("Started recording.")
-            led.write(True)
+            led.write(False)
             sleep(3)
             res_mean = []
             last_mean=0
@@ -85,15 +86,16 @@ def main():
                 if(result<1.3):
                     res_mean.append(result)
                     if(len(res_mean)==5):
-                        led.write(False)
+                        led.write(True)
                         break
                 else:
                     res_mean=[]
                 last_mean = np.mean(gray)
+            
 
 
         else:
-            led.write(False)
+            led.write(True)
         last_mean= np.mean(gray)
 
 

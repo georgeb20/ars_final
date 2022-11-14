@@ -91,7 +91,7 @@ def main():
                         break
                 else:
                     res_mean=[]
-                last_mean = result
+                last_mean = np.mean(gray)
 
 
         else:

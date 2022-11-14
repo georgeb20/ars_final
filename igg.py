@@ -12,7 +12,7 @@ while(True):
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     result = np.abs(np.mean(gray) - last_mean)
     print(result)
-    if result > 0.3:
+    if result > 1:
         print("Motion detected!")
         print("Started recording.")
         led.write(True)

@@ -88,6 +88,7 @@ def main():
                         break
                 else:
                     res_mean=[]
+                last_mean = result
             sleep(10)
 
 

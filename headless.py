@@ -73,11 +73,8 @@ def main():
             print("Motion detected!")
             print("Started recording.")
             led.write(True)
-            sleep(5)
-            count=0
-            while(count<200):
-                ret, frame = cap.read()
-                count=count+1
+            sleep(10)
+
 
         else:
             led.write(False)

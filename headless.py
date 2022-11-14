@@ -16,7 +16,6 @@ from scipy import ndimage
 from periphery import Serial
 from periphery import GPIO
 from time import sleep
-from skimage.metrics import structural_similarity as compare_ssim
 
 
 

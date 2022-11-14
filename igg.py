@@ -3,7 +3,7 @@ import numpy as np
 from time import sleep
 from periphery import GPIO
 
-cap = cv2.VideoCapture(1)
+cap = cv2.VideoCapture(0)
 last_mean = 0
 led = GPIO("/dev/gpiochip2", 13, "out")
 while(True):

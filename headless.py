@@ -103,7 +103,7 @@ def main():
             cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
             run_inference(interpreter, cv2_im_rgb.tobytes())
             objs = get_objects(interpreter, args.threshold)
-            if(objs>5):
+            if(len(objs)>5):
                 print("Multiple resistors detected!")
                 computed_resistance = [0]
                 break

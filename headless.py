@@ -112,7 +112,10 @@ def main():
                 if(resistance in resistors):
                     computed_resistance.append(resistance)
             attempts+=1
-        final_resistance = mode(computed_resistance)
+        if(computed_resistance == []):
+            final_resistance = 0
+        else:
+            final_resistance = mode(computed_resistance)
         print(final_resistance)            
         resistance_array = resistance2array(final_resistance)
         #serial.write(bytes(resistance_array,'utf-8'))
@@ -189,6 +192,7 @@ def get_resistance(cv2_im, inference_size, objs, labels):
         s=s+100
         
     resistance = color2res(colors)
+    print(resistance)
     #resistance_array = resistance2array(resistance)
     #serial.write(bytes(resistance_array,'utf-8'))
 

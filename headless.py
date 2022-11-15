@@ -105,7 +105,7 @@ def main():
             objs = get_objects(interpreter, args.threshold)
             if(len(objs)>5):
                 print("Multiple resistors detected!")
-                computed_resistance = [0]
+                computed_resistance = []
                 break
             else:
                 resistance = get_resistance(cv2_im, inference_size, objs, labels)
@@ -114,10 +114,13 @@ def main():
             attempts+=1
         if(computed_resistance == []):
             final_resistance = 0
+            #resistance_array = something jeff wants
+
         else:
             final_resistance = mode(computed_resistance)
+            #resistance_array = resistance2array(final_resistance)
+
         print(final_resistance)            
-        resistance_array = resistance2array(final_resistance)
         #serial.write(bytes(resistance_array,'utf-8'))
         # cv2.imshow('frame', cv2_im)
         # led.write(True) # allow shaking

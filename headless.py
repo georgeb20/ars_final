@@ -129,6 +129,7 @@ def detect_resistor(cap,threshhold):
     ret,frame = cap.read()
     gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
     last_mean = np.mean(gray)
+    print("I'm ready to detect a resistor.")
     while(True):
         ret, frame = cap.read()
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)

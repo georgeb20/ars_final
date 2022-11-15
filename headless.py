@@ -1,4 +1,5 @@
 import argparse
+import colorsys
 import cv2
 import os
 
@@ -7,10 +8,29 @@ from pycoral.adapters.detect import get_objects
 from pycoral.utils.dataset import read_label_file
 from pycoral.utils.edgetpu import make_interpreter
 from pycoral.utils.edgetpu import run_inference
+#
+import cv2
 from color_recognition_api import color_histogram_feature_extraction
 from color_recognition_api import knn_classifier
+import os
 import os.path
+from PIL import Image
+from PIL import ImageDraw
+from PIL import ImageFont
+
 import numpy as np
+import tflite_runtime.interpreter as tflite 
+from pycoral.adapters import common
+from pycoral.adapters import detect
+from pycoral.utils.dataset import read_label_file
+import random
+import os
+from color_recognition_api import color_histogram_feature_extraction
+from color_recognition_api import knn_classifier
+import cv2
+
+import time
+from multiprocessing import cpu_count
 
 from scipy import ndimage
 from periphery import Serial
@@ -20,10 +40,26 @@ from time import sleep
 from statistics import mode
 
 
+#from utils import CameraWebsocketHandler
+#from utils.BiQuad import BiQuadFilter
+#from functools import partial
+#from PIL import Image
+#from scipy import ndimage
+#import edgetpu.classification.engine
+#import threading
+#import asyncio
+#import base64
+#import utils
+#import cv2
+#import argparse
+#import sys
+#import RPi.GPIO as GPIO
+
 resistors = [100,120,270,470,1000,1500,2200,2700,3900,5600,8200,10000,11000,15000,22000,27000,47000,68000,100000,110000,222000,390000,680000,1000000,4700000,5600000,10000000]
-serial = Serial("/dev/ttymxc2", 9600)
-led = GPIO("/dev/gpiochip2", 13, "out")
-led.write(True)
+
+#serial = Serial("/dev/ttymxc2", 9600)
+#led = GPIO("/dev/gpiochip2", 13, "out")
+#led.write(True)
 def main():
     
     default_model_dir = '.'
@@ -41,15 +77,6 @@ def main():
                         help='classifier score threshold')
     args = parser.parse_args()
 
-    colors_array = ["black","brown","red","orange","yellow","green","blue","violet","grey","white","gold"]
-    values = [0,1,2,3,4,5,6,7,8,9,-1]
-
-    prediction = 'n.a.'
-    mean = [None]
-    sliding_window = []
-    filter_type = 'zone'
-    # checking whether the training data is ready
-
     print ('training data is being created...')
     open('training.data', 'w')
     color_histogram_feature_extraction.training()
@@ -63,50 +90,70 @@ def main():
     inference_size = input_size(interpreter)
 
     cap = cv2.VideoCapture(args.camera_idx)
-
-    last_mean = 0
-    print('hi')
     while cap.isOpened():
+        frame = detect_resistor(cap,threshhold=1.3)
+        #led.write(False) # stop shaking
+        attempts=0
+        computed_resistance = []
+        final_resistance = 0
+        while(attempts<5): #5 attempts to find the resistance
+            focus(cap,thresh=.3,frames=3)
+            cv2_im = frame
+            cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
+            cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
+            run_inference(interpreter, cv2_im_rgb.tobytes())
+            objs = get_objects(interpreter, args.threshold)
+            if(objs>5):
+                print("Multiple resistors detected!")
+                computed_resistance = [0]
+                break
+            else:
+                resistance = get_resistance(cv2_im, inference_size, objs, labels)
+                if(resistance in resistors):
+                    computed_resistance.append(resistance)
+            attempts+=1
+        final_resistance = mode(computed_resistance)
+        print(final_resistance)            
+        resistance_array = resistance2array(final_resistance)
+        #serial.write(bytes(resistance_array,'utf-8'))
+        # cv2.imshow('frame', cv2_im)
+        # led.write(True) # allow shaking
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+   # serial.close()
+    cap.release()
+    cv2.destroyAllWindows()
+
+def detect_resistor(cap,threshhold):
+    focus(cap,threshhold=.5,frames=5)
+    ret,frame = cap.read()
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    last_mean = np.mean(gray)
+    while(True):
         ret, frame = cap.read()
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         result = np.abs(np.mean(gray) - last_mean)
-        print(result)
-
-        if result > 1:
-            print(result)
-            print("Motion detected!")
-            print("Started recording.")
-            led.write(False)
-            sleep(3)
-            res_mean = []
-            last_mean=0
-            while(True):
-                ret, frame = cap.read()
-                gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-                result = np.abs(np.mean(gray) - last_mean) 
-                if(result<1.3):
-                    res_mean.append(result)
-                    if(len(res_mean)==5):
-                        led.write(True)
-                        break
-                else:
-                    res_mean=[]
-                last_mean = np.mean(gray)
-            
-
-
+        if(result>threshhold):
+            print("Resistor detected! Taking a picture.")        
+            focus(cap,threshhold=.5,frames=5)
+            ret, frame = cap.read()
+            return frame
+        last_mean = np.mean(gray)
+def focus(cap,threshhold,frames):
+    last_mean=0
+    count=0
+    while(True):
+        ret, frame = cap.read()
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        result = np.abs(np.mean(gray) - last_mean) 
+        if(result<threshhold):
+            count+=1
+            if(count==frames):
+                return
         else:
-            led.write(True)
-        last_mean= np.mean(gray)
-
-
-    led.write(False)
-    led.close()
-    serial.close()
-    cap.release()
-    cv2.destroyAllWindows()
-    
-
+            count=0
+        last_mean = np.mean(gray)
+        
 def resistance2array(resistance):
     string_res = str(resistance)
     first_digit = string_res[0]
@@ -114,10 +161,11 @@ def resistance2array(resistance):
     num_zeros = str(len(string_res[2:]))
     return first_digit,second_digit,num_zeros
 
-def append_objs_to_img(cv2_im, inference_size, objs,colors_array,values):
+def get_resistance(cv2_im, inference_size, objs, labels):
     height, width, channels = cv2_im.shape
     scale_x, scale_y = width / inference_size[0], height / inference_size[1]
     colors=[]
+    s=30
     for obj in objs:
         bbox = obj.bbox.scale(scale_x, scale_y)
 
@@ -131,33 +179,27 @@ def append_objs_to_img(cv2_im, inference_size, objs,colors_array,values):
         band_crop = cv2_im[y0:y0+dy,x0:x0+dx]
         color_histogram_feature_extraction.color_histogram_of_test_image(band_crop)
         prediction = knn_classifier.main('training.data', 'test.data')
-        colors.append(prediction)
         
-    resistance = color2res(colors,colors_array,values)
-    #print(resistance)
+        percent = int(100 * obj.score)
+        label = '{}% {}'.format(percent, labels.get(obj.id, obj.id))
+
+
+        colors.append(prediction)
+        s=s+100
+        
+    resistance = color2res(colors)
     #resistance_array = resistance2array(resistance)
     #serial.write(bytes(resistance_array,'utf-8'))
-  #  print(colors)
-
-def is_good_photo(img, height, mean, sliding_window):
-    threshold = 4.5
-    center = ndimage.measurements.center_of_mass(img)
-    detection_zone_avg = (center[0] + center[1]) / 2
 
 
+    print(colors)
+    return resistance
 
-    if len(sliding_window) > 30:
-        mean[0] = np.mean(sliding_window)
-        sliding_window.clear()
 
-    else:
-        sliding_window.append(detection_zone_avg)
-    # print(detection_zone_avg)
-    if mean[0] != None and abs(detection_zone_avg - mean[0]) > threshold:
-        return True
+def color2res(bands):
+    colors =  ["black","brown","red","orange","yellow","green","blue","violet","grey","white","gold"]
+    values = [0,1,2,3,4,5,6,7,8,9,-1]
 
-    return False
-def color2res(bands,colors,values):
     if "unknown" in bands:
         return 0
     colors.reverse()
@@ -177,3 +219,4 @@ def color2res(bands,colors,values):
 
 if __name__ == '__main__':
     main()
+        # objs = get_objects(interpreter, args.threshold)[:args.top_k]

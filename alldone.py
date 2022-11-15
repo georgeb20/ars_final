@@ -105,34 +105,40 @@ def main():
         if result>1: #do shit when a resistor is detected
             print("Resistor detected! Taking a picture.")
             led.write(False) # stop shaking
-            #put ur dogshit mlvs here
-            cv2_im = frame
-            height=640
-            cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
-            cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
-            run_inference(interpreter, cv2_im_rgb.tobytes())
-        # objs = get_objects(interpreter, args.threshold)[:args.top_k]
-            objs = get_objects(interpreter, args.threshold)
-            cv2_im = append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
+            attempts=0
+            computed_resistance = []
+            while(attempts<10):
+                focus(cap,thresh=.3,frames=3)
+                cv2_im = frame
+                cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
+                cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
+                run_inference(interpreter, cv2_im_rgb.tobytes())
+                objs = get_objects(interpreter, args.threshold)
+                cv2_im,resistance = append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
+                if(resistance in resistors):
+                    computed_resistance.append(resistance)
+                attempts+=1
+            final_resistance = mode(computed_resistance)
+            print(final_resistance)            
             cv2.imshow('frame', cv2_im)
-            focus() #focus the camera
+            focus(cap,threshhold=1.3,frames=5) #focus the camera
             led.write(True) # allow shaking
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     serial.close()
     cap.release()
     cv2.destroyAllWindows()
-    
-def focus(cap):
+
+def focus(cap,threshhold,frames):
     last_mean=0
     res_mean = []
     while(True):
         ret, frame = cap.read()
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         result = np.abs(np.mean(gray) - last_mean) 
-        if(result<1.3):
+        if(result<threshhold):
             res_mean.append(result)
-            if(len(res_mean)==5):
+            if(len(res_mean)==frames):
                 return
         else:
             res_mean=[]
@@ -181,7 +187,7 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
     cv2_im = cv2.putText(cv2_im, str(resistance), (30, 30),
                             cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 2)
     print(colors)
-    return cv2_im
+    return cv2_im,resistance
 
 
 def color2res(bands,colors,values):
@@ -204,3 +210,4 @@ def color2res(bands,colors,values):
 
 if __name__ == '__main__':
     main()
+        # objs = get_objects(interpreter, args.threshold)[:args.top_k]

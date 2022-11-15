@@ -91,14 +91,14 @@ def main():
 
     cap = cv2.VideoCapture(args.camera_idx)
     while cap.isOpened():
-        frame = detect_resistor(cap,threshhold=1.3)
+        detect_resistor(cap,threshhold=1.3)
         #led.write(False) # stop shaking
         attempts=0
         computed_resistance = []
         final_resistance = 0
         while(attempts<5): #5 attempts to find the resistance
             focus(cap,threshhold=.3,frames=3)
-            cv2_im = frame
+            ret, cv2_im = cap.read()
             cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
             cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
             run_inference(interpreter, cv2_im_rgb.tobytes())
@@ -138,10 +138,8 @@ def detect_resistor(cap,threshhold):
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         result = np.abs(np.mean(gray) - last_mean)
         if(result>threshhold):
-            print("Resistor detected! Taking a picture.")        
-            focus(cap,threshhold=.5,frames=5)
-            ret, frame = cap.read()
-            return frame
+            print("Resistor detected!")        
+            return
         last_mean = np.mean(gray)
 def focus(cap,threshhold,frames):
     last_mean=0

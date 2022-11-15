@@ -17,9 +17,10 @@ from periphery import Serial
 from periphery import GPIO
 from time import sleep
 
+from statistics import mode
 
 
-
+resistors = [100,120,270,470,1000,1500,2200,2700,3900,5600,8200,10000,11000,15000,22000,27000,47000,68000,100000,110000,222000,390000,680000,1000000,4700000,5600000,10000000]
 serial = Serial("/dev/ttymxc2", 9600)
 led = GPIO("/dev/gpiochip2", 13, "out")
 led.write(True)

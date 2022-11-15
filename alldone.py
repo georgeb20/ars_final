@@ -34,6 +34,10 @@ from multiprocessing import cpu_count
 
 from scipy import ndimage
 from periphery import Serial
+from periphery import GPIO
+from time import sleep
+
+from statistics import mode
 
 
 #from utils import CameraWebsocketHandler
@@ -51,9 +55,11 @@ from periphery import Serial
 #import sys
 #import RPi.GPIO as GPIO
 
+resistors = [100,120,270,470,1000,1500,2200,2700,3900,5600,8200,10000,11000,15000,22000,27000,47000,68000,100000,110000,222000,390000,680000,1000000,4700000,5600000,10000000]
 
 serial = Serial("/dev/ttymxc2", 9600)
-
+led = GPIO("/dev/gpiochip2", 13, "out")
+led.write(True)
 def main():
     
     default_model_dir = '.'
@@ -75,9 +81,6 @@ def main():
     values = [0,1,2,3,4,5,6,7,8,9,-1]
 
     prediction = 'n.a.'
-    mean = [None]
-    sliding_window = []
-    filter_type = 'zone'
     # checking whether the training data is ready
 
     print ('training data is being created...')
@@ -93,28 +96,48 @@ def main():
     inference_size = input_size(interpreter)
 
     cap = cv2.VideoCapture(args.camera_idx)
-
+    last_mean = 0
     while cap.isOpened():
         ret, frame = cap.read()
-        if not ret:
-            break
-        cv2_im = frame
-        height=640
-     #   if(is_good_photo(cv2_im, height, mean, sliding_window)):
-        cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
-        cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
-        run_inference(interpreter, cv2_im_rgb.tobytes())
-       # objs = get_objects(interpreter, args.threshold)[:args.top_k]
-        objs = get_objects(interpreter, args.threshold)
-        cv2_im = append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
-        cv2.imshow('frame', cv2_im)
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        result = np.abs(np.mean(gray) - last_mean)
+        print(result)
+        if result>1: #do shit when a resistor is detected
+            print("Resistor detected! Taking a picture.")
+            led.write(False) # stop shaking
+            #put ur dogshit mlvs here
+            cv2_im = frame
+            height=640
+            cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
+            cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
+            run_inference(interpreter, cv2_im_rgb.tobytes())
+        # objs = get_objects(interpreter, args.threshold)[:args.top_k]
+            objs = get_objects(interpreter, args.threshold)
+            cv2_im = append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
+            cv2.imshow('frame', cv2_im)
+            focus() #focus the camera
+            led.write(True) # allow shaking
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     serial.close()
     cap.release()
     cv2.destroyAllWindows()
     
-
+def focus(cap):
+    last_mean=0
+    res_mean = []
+    while(True):
+        ret, frame = cap.read()
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        result = np.abs(np.mean(gray) - last_mean) 
+        if(result<1.3):
+            res_mean.append(result)
+            if(len(res_mean)==5):
+                return
+        else:
+            res_mean=[]
+        last_mean = np.mean(gray)
+        
 def resistance2array(resistance):
     string_res = str(resistance)
     first_digit = string_res[0]
@@ -160,25 +183,7 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
     print(colors)
     return cv2_im
 
-def is_good_photo(img, height, mean, sliding_window):
-    threshold = 4.5
-    center = ndimage.measurements.center_of_mass(img)
-    detection_zone_avg = (center[0] + center[1]) / 2
 
-
-
-    if len(sliding_window) > 30:
-        mean[0] = np.mean(sliding_window)
-        sliding_window.clear()
-
-    else:
-        sliding_window.append(detection_zone_avg)
-    # print(detection_zone_avg)
-    if mean[0] != None and abs(detection_zone_avg - mean[0]) > threshold:
-        print("Target Detected Taking Picture")
-        return True
-
-    return False
 def color2res(bands,colors,values):
     if "unknown" in bands:
         return 0

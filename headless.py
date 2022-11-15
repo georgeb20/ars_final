@@ -97,7 +97,7 @@ def main():
         computed_resistance = []
         final_resistance = 0
         while(attempts<5): #5 attempts to find the resistance
-            focus(cap,thresh=.3,frames=3)
+            focus(cap,threshhold=.3,frames=3)
             cv2_im = frame
             cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
             cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)

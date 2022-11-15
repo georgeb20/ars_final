@@ -97,7 +97,7 @@ def main():
         computed_resistance = []
         final_resistance = 0
         while(attempts<5): #5 attempts to find the resistance
-            focus(cap,threshhold=.3,frames=3)
+            focus(cap,threshhold=.3,frames=7)
             ret, cv2_im = cap.read()
             cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
             cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
@@ -170,7 +170,6 @@ def get_resistance(cv2_im, inference_size, objs, labels):
     height, width, channels = cv2_im.shape
     scale_x, scale_y = width / inference_size[0], height / inference_size[1]
     colors=[]
-    s=30
     for obj in objs:
         bbox = obj.bbox.scale(scale_x, scale_y)
 
@@ -184,13 +183,7 @@ def get_resistance(cv2_im, inference_size, objs, labels):
         band_crop = cv2_im[y0:y0+dy,x0:x0+dx]
         color_histogram_feature_extraction.color_histogram_of_test_image(band_crop)
         prediction = knn_classifier.main('training.data', 'test.data')
-        
-        percent = int(100 * obj.score)
-        label = '{}% {}'.format(percent, labels.get(obj.id, obj.id))
-
-
         colors.append(prediction)
-        s=s+100
         
     resistance = color2res(colors)
     print(resistance)

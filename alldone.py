@@ -68,10 +68,10 @@ def main():
                         default=os.path.join(default_model_dir,default_model))
     parser.add_argument('--labels', help='label file path',
                         default=os.path.join(default_model_dir, default_labels))
-    parser.add_argument('--top_k', type=int, default=4,
+    parser.add_argument('--top_k', type=int, default=5,
                         help='number of categories with highest score to display')
     parser.add_argument('--camera_idx', type=int, help='Index of which video source to use. ', default = 1)
-    parser.add_argument('--threshold', type=float, default=0.3,
+    parser.add_argument('--threshold', type=float, default=0.28,
                         help='classifier score threshold')
     args = parser.parse_args()
 
@@ -104,7 +104,7 @@ def main():
             cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
             cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
             run_inference(interpreter, cv2_im_rgb.tobytes())
-            objs = get_objects(interpreter, args.threshold)
+            objs = get_objects(interpreter, args.threshold)[:args.top_k]
             if(len(objs)>5):
                 print("Multiple resistors detected!")
                 computed_resistance = []

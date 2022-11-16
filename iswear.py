@@ -60,13 +60,16 @@ resistors = [100,120,270,470,1000,1500,2200,2700,3900,5600,8200,10000,11000,1500
 #serial = Serial("/dev/ttymxc2", 9600)
 led = GPIO("/dev/gpiochip2", 13, "out")
 led.write(True)
+
+jeff = GPIO("/dev/gpiochip4", 13, "in")
+
 def main():
     cap = cv2.VideoCapture(1)
     while cap.isOpened():
         detect_resistor(cap,threshhold=1.3)
         led.write(False) #stop shaking
-        sleep(3)
-        led.write(True) # allow shaking
+        while(jeff.read()==False):
+            continue
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     cap.release()

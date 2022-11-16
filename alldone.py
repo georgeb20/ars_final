@@ -91,6 +91,7 @@ def main():
     interpreter.allocate_tensors()
     labels = read_label_file(args.labels)
     inference_size = input_size(interpreter)
+    serial = Serial("/dev/ttymxc2", 9600)
 
     cap = cv2.VideoCapture(args.camera_idx)
     while cap.isOpened():
@@ -116,11 +117,12 @@ def main():
             attempts+=1
         if(computed_resistance == []):
             final_resistance = 0
-            #resistance_array = something jeff wants
-
         else:
             final_resistance = mode(computed_resistance)
-            #resistance_array = resistance2array(final_resistance)
+        print(final_resistance)
+        resistance_array = resistance2array(final_resistance)
+        serial.write(bytes(resistance_array,'utf-8'))
+        a= input("wait")
         cv2.imshow('frame', cv2_im)
         print(final_resistance)            
         if cv2.waitKey(1) & 0xFF == ord('q'):

@@ -159,6 +159,7 @@ def focus(cap,threshhold,frames):
             count=0
         last_mean = np.mean(gray)
         
+
 def resistance2array(resistance):
     if(resistance==0):
         resistance=2200
@@ -166,7 +167,8 @@ def resistance2array(resistance):
     first_digit = string_res[0]
     second_digit = string_res[1]
     num_zeros = str(len(string_res[2:]))
-    return first_digit,second_digit,num_zeros
+    return first_digit+second_digit+num_zeros
+
 
 def append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values):
     height, width, channels = cv2_im.shape

@@ -66,10 +66,11 @@ jeff = GPIO("/dev/gpiochip4", 13, "in")
 def main():
     cap = cv2.VideoCapture(1)
     while cap.isOpened():
-        detect_resistor(cap,threshhold=1.3)
+        detect_resistor(cap,threshhold=1.3)  
         led.write(False) #stop shaking
         while(jeff.read()==False):
             continue
+        focus(threshhold=.5,frames=5)
         led.write(True)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break

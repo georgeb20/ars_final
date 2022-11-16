@@ -57,9 +57,7 @@ from statistics import mode
 
 resistors = [100,120,270,470,1000,1500,2200,2700,3900,5600,8200,10000,11000,15000,22000,27000,47000,68000,100000,110000,222000,390000,680000,1000000,4700000,5600000,10000000]
 
-serial = Serial("/dev/ttymxc2", 9600)
-led = GPIO("/dev/gpiochip2", 13, "out")
-led.write(True)
+
 def main():
     
     default_model_dir = '.'
@@ -80,7 +78,6 @@ def main():
     colors_array = ["black","brown","red","orange","yellow","green","blue","violet","grey","white","gold"]
     values = [0,1,2,3,4,5,6,7,8,9,-1]
 
-    prediction = 'n.a.'
     # checking whether the training data is ready
 
     print ('training data is being created...')
@@ -96,52 +93,69 @@ def main():
     inference_size = input_size(interpreter)
 
     cap = cv2.VideoCapture(args.camera_idx)
-    last_mean = 0
     while cap.isOpened():
-        ret, frame = cap.read()
-        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
-        result = np.abs(np.mean(gray) - last_mean)
-        print(result)
-        if result>1: #do shit when a resistor is detected
-            print("Resistor detected! Taking a picture.")
-            led.write(False) # stop shaking
-            attempts=0
-            computed_resistance = []
-            while(attempts<10):
-                focus(cap,thresh=.3,frames=3)
-                cv2_im = frame
-                cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
-                cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
-                run_inference(interpreter, cv2_im_rgb.tobytes())
-                objs = get_objects(interpreter, args.threshold)
+        detect_resistor(cap,threshhold=1.3)
+        attempts=0
+        computed_resistance = []
+        final_resistance = 0
+        while(attempts<5): #5 attempts to find the resistance
+            focus(cap,threshhold=.3,frames=7)
+            ret, cv2_im = cap.read()
+            cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
+            cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
+            run_inference(interpreter, cv2_im_rgb.tobytes())
+            objs = get_objects(interpreter, args.threshold)
+            if(len(objs)>5):
+                print("Multiple resistors detected!")
+                computed_resistance = []
+                break
+            else:
                 cv2_im,resistance = append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
-                if(resistance in resistors):
-                    computed_resistance.append(resistance)
-                attempts+=1
+                cv2.imshow('frame', cv2_im)
+            if(resistance in resistors):
+                computed_resistance.append(resistance)
+            attempts+=1
+        if(computed_resistance == []):
+            final_resistance = 0
+            #resistance_array = something jeff wants
+
+        else:
             final_resistance = mode(computed_resistance)
-            print(final_resistance)            
-            cv2.imshow('frame', cv2_im)
-            focus(cap,threshhold=1.3,frames=5) #focus the camera
-            led.write(True) # allow shaking
+            #resistance_array = resistance2array(final_resistance)
+
+        print(final_resistance)            
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
-    serial.close()
     cap.release()
     cv2.destroyAllWindows()
 
+def detect_resistor(cap,threshhold):
+    focus(cap,threshhold=.5,frames=5)
+    ret,frame = cap.read()
+    gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+    last_mean = np.mean(gray)
+    print("I'm ready to detect a resistor.")
+    while(True):
+        ret, frame = cap.read()
+        gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
+        result = np.abs(np.mean(gray) - last_mean)
+        if(result>threshhold):
+            print("Resistor detected!")        
+            return
+        last_mean = np.mean(gray)
 def focus(cap,threshhold,frames):
     last_mean=0
-    res_mean = []
+    count=0
     while(True):
         ret, frame = cap.read()
         gray = cv2.cvtColor(frame, cv2.COLOR_BGR2GRAY)
         result = np.abs(np.mean(gray) - last_mean) 
         if(result<threshhold):
-            res_mean.append(result)
-            if(len(res_mean)==frames):
+            count+=1
+            if(count==frames):
                 return
         else:
-            res_mean=[]
+            count=0
         last_mean = np.mean(gray)
         
 def resistance2array(resistance):

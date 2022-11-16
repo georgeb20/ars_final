@@ -68,9 +68,11 @@ def main():
     while cap.isOpened():
         detect_resistor(cap,threshhold=1.3)  
         led.write(False) #stop shaking
+        print("Shake off")
         while(jeff.read()==False):
-            led.write(False) #stop shaking
+            pass
         focus(cap,threshhold=.5,frames=5)
+        print("Shake on")
         led.write(True)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break

@@ -160,6 +160,8 @@ def focus(cap,threshhold,frames):
         last_mean = np.mean(gray)
         
 def resistance2array(resistance):
+    if(resistance==0):
+        return [str(0)]
     string_res = str(resistance)
     first_digit = string_res[0]
     second_digit = string_res[1]

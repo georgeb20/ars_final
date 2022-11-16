@@ -70,7 +70,7 @@ def main():
         led.write(False) #stop shaking
         while(jeff.read()==False):
             continue
-        focus(threshhold=.5,frames=5)
+        focus(cap,threshhold=.5,frames=5)
         led.write(True)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break

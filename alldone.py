@@ -111,7 +111,6 @@ def main():
                 break
             else:
                 cv2_im,resistance = append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
-                cv2.imshow('frame', cv2_im)
             if(resistance in resistors):
                 computed_resistance.append(resistance)
             attempts+=1
@@ -122,7 +121,7 @@ def main():
         else:
             final_resistance = mode(computed_resistance)
             #resistance_array = resistance2array(final_resistance)
-
+        cv2.imshow('frame', cv2_im)
         print(final_resistance)            
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break

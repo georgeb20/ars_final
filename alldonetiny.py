@@ -206,16 +206,15 @@ def main():
 
 
     print('Loading {} with {} labels.'.format(args.model, args.labels))
-    interpreter = make_interpreter(args.model)
+    interpreter = tflite.Interpreter(default_model)
     interpreter.allocate_tensors()
+    labels = read_label_file(default_labels)
+
     tile_overlap = 15
-    #tile_sizes = "160x120"
     score_threshold = .01
     iou_threshold = .01
     #ARGS ENDED HERE!!!
 
-    labels = read_label_file(args.labels)
-    inference_size = input_size(interpreter)
   #  serial = Serial("/dev/ttymxc2", 9600)
 
     cap = cv2.VideoCapture(args.camera_idx)

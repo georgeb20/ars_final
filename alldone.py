@@ -56,7 +56,51 @@ from statistics import mode
 #import RPi.GPIO as GPIO
 
 resistors = [100,120,270,470,1000,1500,2200,2700,3900,5600,8200,10000,11000,15000,22000,27000,47000,68000,100000,110000,222000,390000,680000,1000000,4700000,5600000,10000000]
+def non_max_suppression(objects, threshold):
+  """Returns a list of indexes of objects passing the NMS.
 
+  Args:
+    objects: result candidates.
+    threshold: the threshold of overlapping IoU to merge the boxes.
+
+  Returns:
+    A list of indexes containings the objects that pass the NMS.
+  """
+  if len(objects) == 1:
+    return [0]
+
+  boxes = np.array([o.bbox for o in objects])
+  xmins = boxes[:, 0]
+  ymins = boxes[:, 1]
+  xmaxs = boxes[:, 2]
+  ymaxs = boxes[:, 3]
+
+  areas = (xmaxs - xmins) * (ymaxs - ymins)
+  scores = [o.score for o in objects]
+  idxs = np.argsort(scores)
+
+  selected_idxs = []
+  while idxs.size != 0:
+
+    selected_idx = idxs[-1]
+    selected_idxs.append(selected_idx)
+
+    overlapped_xmins = np.maximum(xmins[selected_idx], xmins[idxs[:-1]])
+    overlapped_ymins = np.maximum(ymins[selected_idx], ymins[idxs[:-1]])
+    overlapped_xmaxs = np.minimum(xmaxs[selected_idx], xmaxs[idxs[:-1]])
+    overlapped_ymaxs = np.minimum(ymaxs[selected_idx], ymaxs[idxs[:-1]])
+
+    w = np.maximum(0, overlapped_xmaxs - overlapped_xmins)
+    h = np.maximum(0, overlapped_ymaxs - overlapped_ymins)
+
+    intersections = w * h
+    unions = areas[idxs[:-1]] + areas[selected_idx] - intersections
+    ious = intersections / unions
+
+    idxs = np.delete(
+        idxs, np.concatenate(([len(idxs) - 1], np.where(ious > threshold)[0])))
+
+  return selected_idxs
 
 def main():
     
@@ -106,12 +150,17 @@ def main():
         cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
         run_inference(interpreter, cv2_im_rgb.tobytes())
         objs = get_objects(interpreter, args.threshold)
+        idxs = non_max_suppression(objs, .2)
+        new_objs=[]
+        for idx in idxs:
+            new_objs.append(objs[idx])
+
            # if(len(objs)>5):
            #     print("Multiple resistors detected!")
            #     computed_resistance = []
           #      break
           #  else:
-        cv2_im,resistance = append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
+        cv2_im,resistance = append_objs_to_img(cv2_im, inference_size, new_objs, labels,colors_array,values)
         # if(resistance in resistors):
         #     computed_resistance.append(resistance)
         #     attempts+=1

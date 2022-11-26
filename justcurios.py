@@ -62,7 +62,7 @@ import collections
 import numpy as np
 from PIL import Image
 from PIL import ImageDraw
-
+import PIL
 from pycoral.adapters import common
 from pycoral.adapters import detect
 from pycoral.utils.dataset import read_label_file
@@ -267,10 +267,11 @@ def main():
 
     
    #image.show()
-    nimg = np.array(image)
-    cv2_im_done = cv2.cvtColor(nimg,cv2.COLOR_RGB2BGR)
-    cv2.imshow('frame', cv2_im_done)
-
+   # nimg = np.array(image)
+    #cv2_im_done = cv2.cvtColor(nimg,cv2.COLOR_RGB2BGR)
+    #cv2.imshow('frame', cv2_im_done)
+    PIL.plt.imshow(image)
+    PIL.plt.show() # image will not be displayed without this
 
 def detect_resistor(cap,threshhold):
     focus(cap,threshhold=.5,frames=5)

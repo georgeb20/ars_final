@@ -217,61 +217,58 @@ def main():
 
   #  serial = Serial("/dev/ttymxc2", 9600)
 
-   # cap = cv2.VideoCapture(args.camera_idx)
-   # while cap.isOpened():
-       # ret, img = cap.read()
-       # img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+    cap = cv2.VideoCapture(args.camera_idx)
+    while cap.isOpened():
+        ret, img = cap.read()
+        image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         # Open image.
-    img_path = "resistor.jpg"
-    image = Image.open(img_path).convert('RGB')
-    draw = ImageDraw.Draw(image)
+      #  draw = ImageDraw.Draw(image)
 
-    objects_by_label = dict()
-    img_size = image.size
-    x_tile = int(img_size[0]/2)
-    y_tile = int(img_size[1]/2)
-    tile_sizes = str(x_tile)+"x"+str(y_tile)
-    tile_sizes = [
-        map(int, tile_size.split('x')) for tile_size in tile_sizes.split(',')
-    ]
+        objects_by_label = dict()
+        img_size = image.size
+        x_tile = int(img_size[0]/2)
+        y_tile = int(img_size[1]/2)
+        tile_sizes = str(x_tile)+"x"+str(y_tile)
+        tile_sizes = [
+            map(int, tile_size.split('x')) for tile_size in tile_sizes.split(',')
+        ]
 
 
-    for tile_size in tile_sizes:
+        for tile_size in tile_sizes:
 
-        for tile_location in tiles_location_gen(img_size, tile_size,
-                                                tile_overlap):
-            tile = image.crop(tile_location)
-            _, scale = common.set_resized_input(
-                interpreter, tile.size,
-                lambda size, img=tile: img.resize(size, Image.NEAREST))
-            interpreter.invoke()
-            objs = detect.get_objects(interpreter, score_threshold, scale)
-        for obj in objs:
-            bbox = [obj.bbox.xmin, obj.bbox.ymin, obj.bbox.xmax, obj.bbox.ymax]
-            bbox = reposition_bounding_box(bbox, tile_location)
-            label = labels.get(obj.id, '')
-            objects_by_label.setdefault(label,
-                                        []).append(Object(label, obj.score, bbox))
+            for tile_location in tiles_location_gen(img_size, tile_size,
+                                                    tile_overlap):
+                tile = image.crop(tile_location)
+                _, scale = common.set_resized_input(
+                    interpreter, tile.size,
+                    lambda size, img=tile: img.resize(size, Image.NEAREST))
+                interpreter.invoke()
+                objs = detect.get_objects(interpreter, score_threshold, scale)
+            for obj in objs:
+                bbox = [obj.bbox.xmin, obj.bbox.ymin, obj.bbox.xmax, obj.bbox.ymax]
+                bbox = reposition_bounding_box(bbox, tile_location)
+                label = labels.get(obj.id, '')
+                objects_by_label.setdefault(label,
+                                            []).append(Object(label, obj.score, bbox))
 
         new_objs=[]
+        for label, objects in objects_by_label.items():
+            idxs = non_max_suppression(objects, iou_threshold)
+            for idx in idxs:
+            # bbox = objects[idx].bbox
 
-    for label, objects in objects_by_label.items():
-        idxs = non_max_suppression(objects, iou_threshold)
-        for idx in idxs:
-        # bbox = objects[idx].bbox
-
-            new_objs.append(objects[idx])
-            draw_object(draw,objects[idx])
-    print("Number of objects detected",len(new_objs))
+                new_objs.append(objects[idx])
+               # draw_object(draw,objects[idx])
+        print("Number of objects detected",len(new_objs))
 
 
-    
-   #image.show()
-   # nimg = np.array(image)
-    #cv2_im_done = cv2.cvtColor(nimg,cv2.COLOR_RGB2BGR)
-    #cv2.imshow('frame', cv2_im_done)
-    PIL.plt.imshow(image)
-    PIL.plt.show() # image will not be displayed without this
+        
+        cv2.imshow('frame', img)
+        if cv2.waitKey(1) & 0xFF == ord('q'):
+            break
+    cap.release()
+    cv2.destroyAllWindows()
+
 
 def detect_resistor(cap,threshhold):
     focus(cap,threshhold=.5,frames=5)

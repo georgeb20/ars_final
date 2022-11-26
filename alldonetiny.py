@@ -208,12 +208,14 @@ def main():
     interpreter = make_interpreter(args.model)
     interpreter.allocate_tensors()
     tile_overlap = 15
-    tile_sizes = "300x300,160x120"
-    score_threshold = 0.5
-    iou_threshold = 0.5
+    #tile_sizes = "160x120"
+    score_threshold = .2
+    iou_threshold = .3
+    #ARGS ENDED HERE!!!
+
     labels = read_label_file(args.labels)
     inference_size = input_size(interpreter)
-    serial = Serial("/dev/ttymxc2", 9600)
+  #  serial = Serial("/dev/ttymxc2", 9600)
 
     cap = cv2.VideoCapture(args.camera_idx)
     while cap.isOpened():
@@ -226,31 +228,74 @@ def main():
 
         objects_by_label = dict()
         img_size = image.size
+        x_tile = int(img_size[0]/2)
+        y_tile = int(img_size[1]/2)
+        tile_sizes = str(x_tile)+"x"+str(y_tile)
+        print(tile_sizes)
         tile_sizes = [
             map(int, tile_size.split('x')) for tile_size in tile_sizes.split(',')
         ]
+
+        image2 = Image.open(img_path)
+
         for tile_size in tile_sizes:
+
             for tile_location in tiles_location_gen(img_size, tile_size,
                                                     tile_overlap):
+                print(1)
                 tile = image.crop(tile_location)
                 _, scale = common.set_resized_input(
                     interpreter, tile.size,
                     lambda size, img=tile: img.resize(size, Image.NEAREST))
                 interpreter.invoke()
                 objs = detect.get_objects(interpreter, score_threshold, scale)
-
-                for obj in objs:
-                    bbox = [obj.bbox.xmin, obj.bbox.ymin, obj.bbox.xmax, obj.bbox.ymax]
-                    bbox = reposition_bounding_box(bbox, tile_location)
-
-                    label = labels.get(obj.id, '')
-                    objects_by_label.setdefault(label,
-                                                []).append(Object(label, obj.score, bbox))
+            for obj in objs:
+                bbox = [obj.bbox.xmin, obj.bbox.ymin, obj.bbox.xmax, obj.bbox.ymax]
+                bbox = reposition_bounding_box(bbox, tile_location)
+                label = labels.get(obj.id, '')
+                print(label)
+                objects_by_label.setdefault(label,
+                                            []).append(Object(label, obj.score, bbox))
+            bands = []
+            letters = string.ascii_lowercase
+            new_objs=[]
 
         for label, objects in objects_by_label.items():
             idxs = non_max_suppression(objects, iou_threshold)
             for idx in idxs:
+            # bbox = objects[idx].bbox
+                new_objs.append(objects[idx])
+
+       # objects=sort_contours(new_objs)
+        objects = new_objs
+        for label, objects in objects_by_label.items():
+        #idxs = non_max_suppression(objects, iou_threshold)
+            print(idxs)
+            #for idx in idxs:
+            for idx in range(len(objects)):
                 draw_object(draw, objects[idx])
+
+                bbox = objects[idx].bbox
+
+
+                img_crop = image2.crop(box=bbox)
+                strs = ''.join(random.choice(letters) for i in range(10))
+                strs = strs+".jpg"
+                #img_crop.save(strs)
+
+                opencvImage = cv2.cvtColor(np.array(img_crop), cv2.COLOR_RGB2BGR)
+                # checking whether the training data is ready
+                
+                    
+
+                # get the prediction
+                color_histogram_feature_extraction.color_histogram_of_test_image(opencvImage)
+                prediction = knn_classifier.main('training.data', 'test.data')
+                print('Detected color is:', prediction)
+                bands.append(prediction)
+
+
+
 
         image.show()
        # cv2.imshow('frame', cv2_im)

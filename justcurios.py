@@ -222,7 +222,7 @@ def main():
         ret, img = cap.read()
         image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         # Open image.
-      #  draw = ImageDraw.Draw(image)
+        draw = ImageDraw.Draw(image)
         pil_img = Image.fromarray(img)
 
         objects_by_label = dict()
@@ -239,7 +239,7 @@ def main():
 
             for tile_location in tiles_location_gen(img_size, tile_size,
                                                     tile_overlap):
-                tile = image.crop(tile_location)
+                tile = pil_img.crop(tile_location)
                 _, scale = common.set_resized_input(
                     interpreter, tile.size,
                     lambda size, img=tile: img.resize(size, Image.NEAREST))
@@ -259,12 +259,13 @@ def main():
             # bbox = objects[idx].bbox
 
                 new_objs.append(objects[idx])
-               # draw_object(draw,objects[idx])
+                draw_object(draw,objects[idx])
         print("Number of objects detected",len(new_objs))
 
 
         
-        cv2.imshow('frame', img)
+        pil_img.show()
+        a=input()
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     cap.release()

@@ -180,7 +180,7 @@ resistors = [100,120,270,470,1000,1500,2200,2700,3900,5600,8200,10000,11000,1500
 def main():
     
     default_model_dir = '.'
-    default_model = 'ssd2.tflite'
+    default_model = 'band80.tflite'
     default_labels = 'band-labels2.txt'
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', help='.tflite model path',

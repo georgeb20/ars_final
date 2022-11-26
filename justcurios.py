@@ -222,8 +222,8 @@ def main():
         ret, img = cap.read()
         image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
         # Open image.
-        draw = ImageDraw.Draw(image)
         pil_img = Image.fromarray(img)
+        draw = ImageDraw.Draw(pil_img)
 
         objects_by_label = dict()
         img_size = pil_img.size

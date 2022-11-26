@@ -226,6 +226,8 @@ def color2res(bands,colors,values):
      #   if flag==1:
       #    bands.reverse()
         return resistance
+    else:
+        return 0
 
 if __name__ == '__main__':
     main()

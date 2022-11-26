@@ -210,7 +210,7 @@ def main():
     interpreter.allocate_tensors()
     tile_overlap = 15
     #tile_sizes = "160x120"
-    score_threshold = .1
+    score_threshold = .01
     iou_threshold = .1
     #ARGS ENDED HERE!!!
 
@@ -247,11 +247,10 @@ def main():
                     lambda size, img=tile: img.resize(size, Image.NEAREST))
                 interpreter.invoke()
                 objs = detect.get_objects(interpreter, score_threshold, scale)
-                print(len(objs))
+                print("Number of objects detected",len(objs))
             for obj in objs:
                 bbox = [obj.bbox.xmin, obj.bbox.ymin, obj.bbox.xmax, obj.bbox.ymax]
                 bbox = reposition_bounding_box(bbox, tile_location)
-                print(obj)
                 label = labels.get(obj.id, '')
                 objects_by_label.setdefault(label,
                                             []).append(Object(label, obj.score, bbox))

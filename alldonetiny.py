@@ -55,6 +55,7 @@ from statistics import mode
 #import sys
 #import RPi.GPIO as GPIO
 #using tiling to detect bands instead
+import string
 
 import collections
 
@@ -236,7 +237,8 @@ def main():
             map(int, tile_size.split('x')) for tile_size in tile_sizes.split(',')
         ]
 
-        image2 = Image.open(img_path)
+        image2 = Image.fromarray(img)
+
 
         for tile_size in tile_sizes:
 

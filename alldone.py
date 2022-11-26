@@ -187,7 +187,7 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
 
         band_crop = cv2_im[y0:y0+dy,x0:x0+dx]
         color_histogram_feature_extraction.color_histogram_of_test_image(band_crop)
-        prediction = knn_classifier.main('training.data', 'test.data')
+        prediction = knn_classifier.main('training.data', 'test.data',3)
         
         percent = int(100 * obj.score)
         label = '{}% {}'.format(percent, labels.get(obj.id, obj.id))

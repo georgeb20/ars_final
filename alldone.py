@@ -210,21 +210,21 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
 
 
 def color2res(bands,colors,values):
-    if "unknown" in bands:
+    if "null" in bands:
         return 0
     colors.reverse()
     flag=0
     if len(bands)==4 or len(bands)==5:
         if(bands[0]=="gold"):
           bands.reverse()
-          flag=1  
-        if(len(bands)==4):
-            resistance =  (values[colors.index(bands[0])]*10 + values[colors.index(bands[1])]) * pow(10,(values[colors.index(bands[2])]))
-        else:
-            resistance =  (values[colors.index(bands[0])]*100 + values[colors.index(bands[1])]*10+values[colors.index(bands[2])]) * pow(10,(values[colors.index(bands[2])]))
+        #  flag=1  
+      #  if(len(bands)==4):
+          resistance =  (values[colors.index(bands[0])]*10 + values[colors.index(bands[1])]) * pow(10,(values[colors.index(bands[2])]))
+       # else:
+      #      resistance =  (values[colors.index(bands[0])]*100 + values[colors.index(bands[1])]*10+values[colors.index(bands[2])]) * pow(10,(values[colors.index(bands[2])]))
 
-        if flag==1:
-          bands.reverse()
+     #   if flag==1:
+      #    bands.reverse()
         return resistance
 
 if __name__ == '__main__':

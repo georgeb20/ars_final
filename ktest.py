@@ -34,7 +34,7 @@ for color in os.listdir(os.path.join(os.getcwd(),'test_dataset')):
         path_img = os.path.join(path,file)
         source_image = cv2.imread(path_img)
         color_histogram_feature_extraction.color_histogram_of_test_image(source_image)
-        prediction = knn_classifier.main('training.data', 'test.data')
+        prediction = knn_classifier.main('training.data', 'test.data',3)
         if(prediction==color):
             per_color_correct=per_color_correct+1
             correct=correct+1

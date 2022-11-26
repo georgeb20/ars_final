@@ -210,8 +210,8 @@ def main():
     interpreter.allocate_tensors()
     tile_overlap = 15
     #tile_sizes = "160x120"
-    score_threshold = .2
-    iou_threshold = .3
+    score_threshold = .1
+    iou_threshold = .1
     #ARGS ENDED HERE!!!
 
     labels = read_label_file(args.labels)
@@ -265,8 +265,10 @@ def main():
                 draw_object(draw,objects[idx])
 
      
-        image.show()
-       # cv2.imshow('frame', cv2_im)
+        #image.show()
+        print(1)
+        cv2_im_done = cv2.cvtColor(image,cv2.COLOR_RGB2BGR)
+        cv2.imshow('frame', cv2_im_done)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     cap.release()

@@ -247,7 +247,6 @@ def main():
                     lambda size, img=tile: img.resize(size, Image.NEAREST))
                 interpreter.invoke()
                 objs = detect.get_objects(interpreter, score_threshold, scale)
-                print("Number of objects detected",len(objs))
             for obj in objs:
                 bbox = [obj.bbox.xmin, obj.bbox.ymin, obj.bbox.xmax, obj.bbox.ymax]
                 bbox = reposition_bounding_box(bbox, tile_location)
@@ -261,8 +260,11 @@ def main():
             idxs = non_max_suppression(objects, iou_threshold)
             for idx in idxs:
             # bbox = objects[idx].bbox
+
                 new_objs.append(objects[idx])
                 draw_object(draw,objects[idx])
+        print("Number of objects detected",len(new_objs))
+
 
      
         #image.show()

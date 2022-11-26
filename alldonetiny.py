@@ -267,7 +267,8 @@ def main():
      
         #image.show()
         print(1)
-        cv2_im_done = cv2.cvtColor(image,cv2.COLOR_RGB2BGR)
+        nimg = np.array(image)
+        cv2_im_done = cv2.cvtColor(nimg,cv2.COLOR_RGB2BGR)
         cv2.imshow('frame', cv2_im_done)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break

@@ -211,7 +211,7 @@ def main():
     tile_overlap = 15
     #tile_sizes = "160x120"
     score_threshold = .01
-    iou_threshold = .1
+    iou_threshold = .01
     #ARGS ENDED HERE!!!
 
     labels = read_label_file(args.labels)

@@ -182,7 +182,7 @@ def get_resistance(cv2_im, inference_size, objs, labels):
 
         band_crop = cv2_im[y0:y0+dy,x0:x0+dx]
         color_histogram_feature_extraction.color_histogram_of_test_image(band_crop)
-        prediction = knn_classifier.main('training.data', 'test.data')
+        prediction = knn_classifier.main('training.data', 'test.data',3)
         colors.append(prediction)
         
     resistance = color2res(colors)

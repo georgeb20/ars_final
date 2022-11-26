@@ -46,8 +46,10 @@ def responseOfNeighbors(neighbors):
             all_possible_neighbors[response] = 1
     sortedVotes = sorted(all_possible_neighbors.items(),
                          key=operator.itemgetter(1), reverse=True)
-    return sortedVotes[0][0]
-
+    try:
+        return sortedVotes[0][0]
+    except:
+        return "null"
 
 # Load image feature data to training feature vectors and test feature vector
 def loadDataset(
@@ -73,12 +75,12 @@ def loadDataset(
             test_feature_vector.append(dataset[x])
 
 
-def main(training_data, test_data):
+def main(training_data, test_data,k):
     training_feature_vector = []  # training feature vector
     test_feature_vector = []  # test feature vector
     loadDataset(training_data, test_data, training_feature_vector, test_feature_vector)
     classifier_prediction = []  # predictions
-    k = 3  # K value of k nearest neighbor
+    #k=3
     for x in range(len(test_feature_vector)):
         neighbors = kNearestNeighbors(training_feature_vector, test_feature_vector[x], k)
         result = responseOfNeighbors(neighbors)
@@ -86,4 +88,4 @@ def main(training_data, test_data):
     if(len(classifier_prediction)>0):
         return classifier_prediction[0]
     else:
-        return "unknown"	
+        return "null"	

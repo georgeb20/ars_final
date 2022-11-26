@@ -11,6 +11,11 @@ import os
 import cv2
 import numpy as np
 from color_recognition_api import knn_classifier as knn_classifier
+def removeGlare(img):
+    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    mask = cv2.threshold(gray, 220, 255, cv2.THRESH_BINARY)[1]
+    result = cv2.inpaint(img, mask, 21, cv2.INPAINT_TELEA)
+    return result
 
 
 def center_crop(img, dim):
@@ -34,10 +39,18 @@ def color_histogram_of_test_image(test_src_image):
     # load the image
     image = test_src_image
     width, height = image.shape[1], image.shape[0]
-    if(width>height): 
-        image = center_crop(image, (width,5))
-    if(height>width): 
-        image = center_crop(image, (5,height))
+    crop_size = 10
+    # if(width>height): 
+    #     image = center_crop(image, (width,crop_size))
+    # if(height>width): 
+    #     image = center_crop(image, (crop_size,height))
+    if(width>height):
+        image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
+        width, height = image.shape[1], image.shape[0]
+    image = removeGlare(image)
+    image = center_crop(image, (crop_size,height))
+
+
     chans = cv2.split(image)
     colors = ('b', 'g', 'r')
     features = []
@@ -94,12 +107,17 @@ def color_histogram_of_training_image(img_name):
 
     # load the image
     image = cv2.imread(img_name)
-    width, height = image.shape[1], image.shape[0]
-    if(width>height): 
-        image = center_crop(image, (width,5))
-    if(height>width): 
-        image = center_crop(image, (5,height))
 
+    width, height = image.shape[1], image.shape[0]
+    #crop_size = 10
+    # if(width>height): 
+    #     image = center_crop(image, (width,crop_size))
+    # if(height>width): 
+    #     image = center_crop(image, (crop_size,height))
+    if(width>height):
+        image = cv2.rotate(image, cv2.ROTATE_90_CLOCKWISE)
+        width, height = image.shape[1], image.shape[0]
+    image = removeGlare(image)
 
     chans = cv2.split(image)
     colors = ('b', 'g', 'r')
@@ -134,8 +152,8 @@ def training():
         color_histogram_of_training_image('./training_dataset/red/' + f)
 
     # yellow color training images
-    for f in os.listdir('./training_dataset/yellow'):
-        color_histogram_of_training_image('./training_dataset/yellow/' + f)
+   # for f in os.listdir('./training_dataset/yellow'):
+   #     color_histogram_of_training_image('./training_dataset/yellow/' + f)
 
     # green color training images
     for f in os.listdir('./training_dataset/green'):
@@ -161,11 +179,11 @@ def training():
     for f in os.listdir('./training_dataset/gold'):
         color_histogram_of_training_image('./training_dataset/gold/' + f)
         
-    for f in os.listdir('./training_dataset/grey'):
-        color_histogram_of_training_image('./training_dataset/grey/' + f)	
+ #   for f in os.listdir('./training_dataset/grey'):
+   #     color_histogram_of_training_image('./training_dataset/grey/' + f)	
 
-    for f in os.listdir('./training_dataset/white'):
-        color_histogram_of_training_image('./training_dataset/white/' + f)
+   # for f in os.listdir('./training_dataset/white'):
+  #      color_histogram_of_training_image('./training_dataset/white/' + f)
 
-    for f in os.listdir('./training_dataset/violet'):
-        color_histogram_of_training_image('./training_dataset/violet/' + f)	
+   # for f in os.listdir('./training_dataset/violet'):
+  #      color_histogram_of_training_image('./training_dataset/violet/' + f)	

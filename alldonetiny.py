@@ -180,8 +180,8 @@ resistors = [100,120,270,470,1000,1500,2200,2700,3900,5600,8200,10000,11000,1500
 def main():
     
     default_model_dir = '.'
-    default_model = 'band80.tflite'
-    default_labels = 'labels.txt'
+    default_model = 'ssd2.tflite'
+    default_labels = 'band-labels2.txt'
     parser = argparse.ArgumentParser()
     parser.add_argument('--model', help='.tflite model path',
                         default=os.path.join(default_model_dir,default_model))
@@ -247,6 +247,7 @@ def main():
                     lambda size, img=tile: img.resize(size, Image.NEAREST))
                 interpreter.invoke()
                 objs = detect.get_objects(interpreter, score_threshold, scale)
+                print(len(objs))
             for obj in objs:
                 bbox = [obj.bbox.xmin, obj.bbox.ymin, obj.bbox.xmax, obj.bbox.ymax]
                 bbox = reposition_bounding_box(bbox, tile_location)

@@ -208,7 +208,7 @@ def main():
     interpreter = make_interpreter(args.model)
     interpreter.allocate_tensors()
     tile_overlap = 15
-    tile_sizes = "160x120"
+    tile_sizes = "300x300,160x120"
     score_threshold = 0.5
     iou_threshold = 0.5
     labels = read_label_file(args.labels)
@@ -227,7 +227,7 @@ def main():
         objects_by_label = dict()
         img_size = image.size
         tile_sizes = [
-            map(int, tile_size.split('x'))
+            map(int, tile_size.split('x')) for tile_size in tile_sizes.split(',')
         ]
         for tile_size in tile_sizes:
             for tile_location in tiles_location_gen(img_size, tile_size,

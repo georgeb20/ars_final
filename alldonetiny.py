@@ -251,8 +251,8 @@ def main():
             for obj in objs:
                 bbox = [obj.bbox.xmin, obj.bbox.ymin, obj.bbox.xmax, obj.bbox.ymax]
                 bbox = reposition_bounding_box(bbox, tile_location)
+                print(obj)
                 label = labels.get(obj.id, '')
-                print(label)
                 objects_by_label.setdefault(label,
                                             []).append(Object(label, obj.score, bbox))
 
@@ -267,7 +267,6 @@ def main():
 
      
         #image.show()
-        print(1)
         nimg = np.array(image)
         cv2_im_done = cv2.cvtColor(nimg,cv2.COLOR_RGB2BGR)
         cv2.imshow('frame', cv2_im_done)

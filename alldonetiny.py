@@ -227,7 +227,7 @@ def main():
         objects_by_label = dict()
         img_size = image.size
         tile_sizes = [
-            map(int, tile_size.split('x')) for tile_size in tile_sizes.split(',')
+            map(int, tile_size.split('x'))
         ]
         for tile_size in tile_sizes:
             for tile_location in tiles_location_gen(img_size, tile_size,

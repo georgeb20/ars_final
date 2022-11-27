@@ -110,8 +110,6 @@ def sort_boxes(boxes):
     for i in sort_index:
         sorted_boxes.append(boxes[i])
 
-    for i in sorted_boxes:
-        print(i.bbox.xmin)
     return sorted_boxes
 def main():
     
@@ -171,7 +169,7 @@ def main():
            #     computed_resistance = []
           #      break
           #  else:
-        cv2_im,resistance = append_objs_to_img(cv2_im, inference_size, new_objs, labels,colors_array,values)
+        cv2_im,resistance = append_objs_to_img(cv2_im, inference_size, sorted_boxes, labels,colors_array,values)
         # if(resistance in resistors):
         #     computed_resistance.append(resistance)
         #     attempts+=1

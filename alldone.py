@@ -124,7 +124,7 @@ def main():
     parser.add_argument('--top_k', type=int, default=5,
                         help='number of categories with highest score to display')
     parser.add_argument('--camera_idx', type=int, help='Index of which video source to use. ', default = 1)
-    parser.add_argument('--threshold', type=float, default=0.34,
+    parser.add_argument('--threshold', type=float, default=0.37,
                         help='classifier score threshold')
     args = parser.parse_args()
 

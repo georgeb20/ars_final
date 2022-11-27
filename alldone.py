@@ -104,6 +104,7 @@ def non_max_suppression(objects, threshold):
 def sort_boxes(boxes):
     sorted_boxes=[]
     all_x0=[]
+    print(len(boxes))
     for obj in boxes:
         all_x0.append(int(obj.bbox.xmin))
         print(int(obj.bbox.xmin))

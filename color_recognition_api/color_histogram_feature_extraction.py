@@ -155,8 +155,8 @@ def training():
         color_histogram_of_training_image('./training_dataset/red/' + f)
 
     # yellow color training images
-  #  for f in os.listdir('./training_dataset/yellow'):
-  #      color_histogram_of_training_image('./training_dataset/yellow/' + f)
+    for f in os.listdir('./training_dataset/yellow'):
+        color_histogram_of_training_image('./training_dataset/yellow/' + f)
 
     # green color training images
     for f in os.listdir('./training_dataset/green'):

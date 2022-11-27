@@ -224,13 +224,14 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
     scale_x, scale_y = width / inference_size[0], height / inference_size[1]
     colors=[]
     s=30
+    count=1
     for obj in objs:
         bbox = obj.bbox.scale(scale_x, scale_y)
 
         x0, y0 = int(bbox.xmin), int(bbox.ymin)
         x1, y1 = int(bbox.xmax), int(bbox.ymax)
-
-
+        print(count,x0)
+        count+=1
         dx = x1-x0
         dy = y1-y0
 

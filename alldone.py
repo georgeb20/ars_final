@@ -261,7 +261,7 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
                              cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 2)
         colors.append(prediction)
         s=s+100
-        
+    print(colors)
     resistance = color2res(colors,colors_array,values)
     #resistance_array = resistance2array(resistance)
     #serial.write(bytes(resistance_array,'utf-8'))

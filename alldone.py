@@ -159,7 +159,7 @@ def main():
         cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
         run_inference(interpreter, cv2_im_rgb.tobytes())
         objs = get_objects(interpreter, args.threshold)
-       # idxs = non_max_suppression(objs, .25)
+        # idxs = non_max_suppression(objs, .25)
         if(len(objs)>0):
             # new_objs=[]
             # for idx in idxs:
@@ -171,15 +171,16 @@ def main():
                 #      break
                 #  else:
             cv2_im,resistance = append_objs_to_img(cv2_im, inference_size, sorted_boxes, labels,colors_array,values)
-            # if(resistance in resistors):
-            #     computed_resistance.append(resistance)
-            #     attempts+=1
-            # if(computed_resistance == []):
-            #     final_resistance = 0
-            # else:
-            #     final_resistance = mode(computed_resistance)
-            # print("Final resistance is ",final_resistance)
+            if(resistance in resistors):
+                computed_resistance.append(resistance)
+                attempts+=1
             print("Resistance calculated is ", resistance)
+
+        if(computed_resistance == []):
+            final_resistance = 0
+        else:
+            final_resistance = mode(computed_resistance)
+        print("Final resistance is ",final_resistance)
        # resistance_array = resistance2array(final_resistance)
         #serial.write(bytes(resistance_array,'utf-8'))
        # a= input("wait")
@@ -240,7 +241,6 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
 
         x0, y0 = int(bbox.xmin), int(bbox.ymin)
         x1, y1 = int(bbox.xmax), int(bbox.ymax)
-        print(count,x0)
         count+=1
         dx = x1-x0
         dy = y1-y0
@@ -265,7 +265,6 @@ def append_objs_to_img(cv2_im, inference_size, objs, labels,colors_array,values)
 
     cv2_im = cv2.putText(cv2_im, str(resistance), (30, 30),
                             cv2.FONT_HERSHEY_SIMPLEX, 1.0, (255, 0, 0), 2)
-    print(colors)
     return cv2_im,resistance
 
 

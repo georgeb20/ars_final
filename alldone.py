@@ -124,7 +124,7 @@ def main():
     parser.add_argument('--top_k', type=int, default=5,
                         help='number of categories with highest score to display')
     parser.add_argument('--camera_idx', type=int, help='Index of which video source to use. ', default = 1)
-    parser.add_argument('--threshold', type=float, default=0.35,
+    parser.add_argument('--threshold', type=float, default=0.31,
                         help='classifier score threshold')
     args = parser.parse_args()
 
@@ -159,6 +159,7 @@ def main():
             run_inference(interpreter, cv2_im_rgb.tobytes())
             objs = get_objects(interpreter, args.threshold)
             # idxs = non_max_suppression(objs, .25)
+            print(len(objs))
             if(len(objs)>0):
                 # new_objs=[]
                 # for idx in idxs:

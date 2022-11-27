@@ -148,42 +148,41 @@ def main():
 
     cap = cv2.VideoCapture(args.camera_idx)
     while cap.isOpened():
-       # detect_resistor(cap,threshhold=1.3)
-       attempts=0
-       computed_resistance = []
-       final_resistance = 0
-       while(attempts<10): #5 attempts to find the resistance
-        #focus(cap,threshhold=.3,frames=7)
-        ret, cv2_im = cap.read()
-        cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
-        cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
-        run_inference(interpreter, cv2_im_rgb.tobytes())
-        objs = get_objects(interpreter, args.threshold)
-        # idxs = non_max_suppression(objs, .25)
-        if(len(objs)>0):
-            # new_objs=[]
-            # for idx in idxs:
-            #     new_objs.append(objs[idx])
-            sorted_boxes = sort_boxes(objs)
-                # if(len(objs)>5):
-                #     print("Multiple resistors detected!")
-                #     computed_resistance = []
-                #      break
-                #  else:
-            cv2_im,resistance = append_objs_to_img(cv2_im, inference_size, sorted_boxes, labels,colors_array,values)
-            if(resistance in resistors):
-                computed_resistance.append(resistance)
-                attempts+=1
-            print("Resistance calculated is ", resistance)
+        attempts=0
+        computed_resistance = []
+        final_resistance = 0
+        while(attempts<10): #5 attempts to find the resistance
+            #focus(cap,threshhold=.3,frames=7)
+            ret, cv2_im = cap.read()
+            cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
+            cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
+            run_inference(interpreter, cv2_im_rgb.tobytes())
+            objs = get_objects(interpreter, args.threshold)
+            # idxs = non_max_suppression(objs, .25)
+            if(len(objs)>0):
+                # new_objs=[]
+                # for idx in idxs:
+                #     new_objs.append(objs[idx])
+                sorted_boxes = sort_boxes(objs)
+                    # if(len(objs)>5):
+                    #     print("Multiple resistors detected!")
+                    #     computed_resistance = []
+                    #      break
+                    #  else:
+                cv2_im,resistance = append_objs_to_img(cv2_im, inference_size, sorted_boxes, labels,colors_array,values)
+                if(resistance in resistors):
+                    computed_resistance.append(resistance)
+                    attempts+=1
+                print("Resistance calculated is ", resistance)
 
         if(computed_resistance == []):
             final_resistance = 0
         else:
             final_resistance = mode(computed_resistance)
         print("Final resistance is ",final_resistance)
-       # resistance_array = resistance2array(final_resistance)
+        # resistance_array = resistance2array(final_resistance)
         #serial.write(bytes(resistance_array,'utf-8'))
-       # a= input("wait")
+        # a= input("wait")
         cv2.imshow('frame', cv2_im)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break

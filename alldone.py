@@ -166,6 +166,7 @@ def main():
                 for idx in idxs:
                     new_objs.append(objs[idx])
                 sorted_boxes = sort_boxes(new_objs)
+                print(sorted_boxes)
                 # if(len(objs)>5):
                 #     print("Multiple resistors detected!")
                 #     computed_resistance = []

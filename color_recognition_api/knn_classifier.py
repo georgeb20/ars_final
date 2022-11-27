@@ -88,4 +88,5 @@ def main(training_data, test_data,k):
     if(len(classifier_prediction)>0):
         return classifier_prediction[0]
     else:
+        print("AHH")
         return "null"	

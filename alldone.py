@@ -66,7 +66,7 @@ def non_max_suppression(objects, threshold):
   Returns:
     A list of indexes containings the objects that pass the NMS.
   """
-  if len(objects) == 1:
+  if len(objects) == 0:
     return [0]
 
   boxes = np.array([o.bbox for o in objects])

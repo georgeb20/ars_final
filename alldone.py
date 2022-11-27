@@ -149,10 +149,10 @@ def main():
     cap = cv2.VideoCapture(args.camera_idx)
     while cap.isOpened():
        # detect_resistor(cap,threshhold=1.3)
-       # attempts=0
-       # computed_resistance = []
-       # final_resistance = 0
-       # while(attempts<1): #5 attempts to find the resistance
+       attempts=0
+       computed_resistance = []
+       final_resistance = 0
+       while(attempts<10): #5 attempts to find the resistance
         #focus(cap,threshhold=.3,frames=7)
         ret, cv2_im = cap.read()
         cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)

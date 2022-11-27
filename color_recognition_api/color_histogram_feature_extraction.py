@@ -155,8 +155,8 @@ def training():
         color_histogram_of_training_image('./training_dataset/red/' + f)
 
     # yellow color training images
-   # for f in os.listdir('./training_dataset/yellow'):
-   #     color_histogram_of_training_image('./training_dataset/yellow/' + f)
+    for f in os.listdir('./training_dataset/yellow'):
+        color_histogram_of_training_image('./training_dataset/yellow/' + f)
 
     # green color training images
     for f in os.listdir('./training_dataset/green'):
@@ -182,11 +182,11 @@ def training():
     for f in os.listdir('./training_dataset/gold'):
         color_histogram_of_training_image('./training_dataset/gold/' + f)
         
- #   for f in os.listdir('./training_dataset/grey'):
-   #     color_histogram_of_training_image('./training_dataset/grey/' + f)	
+    for f in os.listdir('./training_dataset/grey'):
+        color_histogram_of_training_image('./training_dataset/grey/' + f)	
 
-   # for f in os.listdir('./training_dataset/white'):
-  #      color_histogram_of_training_image('./training_dataset/white/' + f)
+    for f in os.listdir('./training_dataset/white'):
+        color_histogram_of_training_image('./training_dataset/white/' + f)
 
-   # for f in os.listdir('./training_dataset/violet'):
-  #      color_histogram_of_training_image('./training_dataset/violet/' + f)	
+    for f in os.listdir('./training_dataset/violet'):
+        color_histogram_of_training_image('./training_dataset/violet/' + f)	

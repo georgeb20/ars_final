@@ -152,7 +152,7 @@ def main():
         attempts=0
         computed_resistance = []
         final_resistance = 0
-        while(attempts<10): #5 attempts to find the resistance
+        while(attempts<1): #5 attempts to find the resistance
             #focus(cap,threshhold=.3,frames=7)
             ret, cv2_im = cap.read()
             cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
@@ -166,11 +166,11 @@ def main():
                 # for idx in idxs:
                 #     new_objs.append(objs[idx])
                 sorted_boxes = sort_boxes(objs)
-                    # if(len(objs)>5):
-                    #     print("Multiple resistors detected!")
-                    #     computed_resistance = []
-                    #      break
-                    #  else:
+                # if(len(objs)>5):
+                #     print("Multiple resistors detected!")
+                #     computed_resistance = []
+                #      break
+                #  else:
                 cv2_im,resistance = append_objs_to_img(cv2_im, inference_size, sorted_boxes, labels,colors_array,values)
                 if(resistance in resistors):
                     computed_resistance.append(resistance)

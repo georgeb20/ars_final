@@ -101,7 +101,11 @@ def non_max_suppression(objects, threshold):
         idxs, np.concatenate(([len(idxs) - 1], np.where(ious > threshold)[0])))
 
   return selected_idxs
-
+def sort_boxes(boxes):
+    sorted_boxes=[]
+    for obj in boxes:
+        print(obj.bbox)
+    return sorted_boxes
 def main():
     
     default_model_dir = '.'
@@ -154,7 +158,7 @@ def main():
         new_objs=[]
         for idx in idxs:
             new_objs.append(objs[idx])
-
+        sorted_boxes = sort_boxes(new_objs)
            # if(len(objs)>5):
            #     print("Multiple resistors detected!")
            #     computed_resistance = []

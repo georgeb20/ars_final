@@ -158,7 +158,7 @@ def main():
             cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
             cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
             run_inference(interpreter, cv2_im_rgb.tobytes())
-            objs = get_objects(interpreter, args.threshold)[:args.top_k]
+            objs = get_objects(interpreter, args.threshold)
            # idxs = non_max_suppression(objs, .05)
             print(len(objs))
             if(len(objs)>0):
@@ -167,10 +167,10 @@ def main():
                 #     new_objs.append(objs[idx])
                 sorted_boxes = sort_boxes(objs)
                 print(len(sorted_boxes))
-                # if(len(objs)>5):
-                #     print("Multiple resistors detected!")
-                #     computed_resistance = []
-                #      break
+                if(len(objs)>5):
+                    print("Multiple resistors detected!")
+                    computed_resistance = []
+                    break
                 #  else:
                 cv2_im,resistance = append_objs_to_img(cv2_im, inference_size, sorted_boxes, labels,colors_array,values)
                 if(resistance in resistors):

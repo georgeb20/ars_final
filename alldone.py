@@ -187,7 +187,8 @@ def main():
         resistance_array = resistance2array(final_resistance)
        # serial.write(bytes(resistance_array,'utf-8'))
         cv2.imshow('frame', cv2_im)
-        a= input("wait")
+
+      #  a= input("wait")
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     cap.release()

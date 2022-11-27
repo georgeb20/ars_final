@@ -106,6 +106,7 @@ def sort_boxes(boxes):
     all_x0=[]
     for obj in boxes:
         all_x0.append(int(obj.bbox.xmin))
+        print(int(obj.bbox.xmin))
     sort_index = np.argsort(all_x0)
     print(sort_index)
     for i in sort_index:

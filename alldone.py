@@ -152,7 +152,7 @@ def main():
         attempts=0
         computed_resistance = []
         final_resistance = 0
-        while(attempts<1): #5 attempts to find the resistance
+        while(attempts<10): #5 attempts to find the resistance
             #focus(cap,threshhold=.3,frames=7)
             ret, cv2_im = cap.read()
             cv2_im_rgb = cv2.cvtColor(cv2_im, cv2.COLOR_BGR2RGB)
@@ -185,10 +185,10 @@ def main():
         print('--------------------------------------')
         print("Final resistance is ",final_resistance)
         resistance_array = resistance2array(final_resistance)
-       # serial.write(bytes(resistance_array,'utf-8'))
-        cv2.imshow('frame', cv2_im)
+        serial.write(bytes(resistance_array,'utf-8'))
+        #cv2.imshow('frame', cv2_im)
 
-      #  a= input("wait")
+        a= input("wait")
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     cap.release()

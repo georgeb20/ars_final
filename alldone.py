@@ -148,6 +148,7 @@ def main():
 
     cap = cv2.VideoCapture(args.camera_idx)
     while cap.isOpened():
+        focus(cap,threshhold=.5,frames=5)
         attempts=0
         computed_resistance = []
         final_resistance = 0

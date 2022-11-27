@@ -160,25 +160,26 @@ def main():
         run_inference(interpreter, cv2_im_rgb.tobytes())
         objs = get_objects(interpreter, args.threshold)
         idxs = non_max_suppression(objs, .15)
-        new_objs=[]
-        for idx in idxs:
-            new_objs.append(objs[idx])
-        sorted_boxes = sort_boxes(new_objs)
-           # if(len(objs)>5):
-           #     print("Multiple resistors detected!")
-           #     computed_resistance = []
-          #      break
-          #  else:
-        cv2_im,resistance = append_objs_to_img(cv2_im, inference_size, sorted_boxes, labels,colors_array,values)
-        # if(resistance in resistors):
-        #     computed_resistance.append(resistance)
-        #     attempts+=1
-        # if(computed_resistance == []):
-        #     final_resistance = 0
-        # else:
-        #     final_resistance = mode(computed_resistance)
-       # print("Final resistance is ",final_resistance)
-        print("Resistance calculated is ", resistance)
+        if(len(objs)>0):
+            new_objs=[]
+            for idx in idxs:
+                new_objs.append(objs[idx])
+            sorted_boxes = sort_boxes(new_objs)
+                # if(len(objs)>5):
+                #     print("Multiple resistors detected!")
+                #     computed_resistance = []
+                #      break
+                #  else:
+            cv2_im,resistance = append_objs_to_img(cv2_im, inference_size, sorted_boxes, labels,colors_array,values)
+            # if(resistance in resistors):
+            #     computed_resistance.append(resistance)
+            #     attempts+=1
+            # if(computed_resistance == []):
+            #     final_resistance = 0
+            # else:
+            #     final_resistance = mode(computed_resistance)
+            # print("Final resistance is ",final_resistance)
+            print("Resistance calculated is ", resistance)
        # resistance_array = resistance2array(final_resistance)
         #serial.write(bytes(resistance_array,'utf-8'))
        # a= input("wait")

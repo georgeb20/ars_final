@@ -172,18 +172,20 @@ def main():
                 cv2_im,resistance = append_objs_to_img(cv2_im, inference_size, sorted_boxes, labels,colors_array,values)
                 if(resistance in resistors):
                     computed_resistance.append(resistance)
-                    attempts+=1
                 print("Resistance calculated is ", resistance)
+            cv2.imshow('frame', cv2_im)
+            attempts+=1
+
 
         if(computed_resistance == []):
             final_resistance = 0
         else:
             final_resistance = mode(computed_resistance)
+        print('--------------------------------------')
         print("Final resistance is ",final_resistance)
         # resistance_array = resistance2array(final_resistance)
         #serial.write(bytes(resistance_array,'utf-8'))
         # a= input("wait")
-        cv2.imshow('frame', cv2_im)
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     cap.release()

@@ -274,8 +274,8 @@ def color2res(bands,colors,values):
     # colors.reverse()
     # flag=0
     if len(bands)==4 or len(bands)==5:
-        # if(bands[0]=="gold"):
-        #   bands.reverse()
+        if(bands[0]=="gold"):
+           bands.reverse()
         #   flag=1  
       #  if(len(bands)==4):
         resistance =  (values[colors.index(bands[0])]*10 + values[colors.index(bands[1])]) * pow(10,(values[colors.index(bands[2])]))

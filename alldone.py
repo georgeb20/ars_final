@@ -103,8 +103,13 @@ def non_max_suppression(objects, threshold):
   return selected_idxs
 def sort_boxes(boxes):
     sorted_boxes=[]
+    all_x0=[]
     for obj in boxes:
-        print(obj.bbox)
+        all_x0.append(int(obj.bbox.xmin))
+    sort_index = np.argsort(all_x0)
+    sorted = np.sort(all_x0)
+    print(sorted)
+    print(sort_index)
     return sorted_boxes
 def main():
     

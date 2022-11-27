@@ -124,7 +124,7 @@ def main():
     parser.add_argument('--top_k', type=int, default=5,
                         help='number of categories with highest score to display')
     parser.add_argument('--camera_idx', type=int, help='Index of which video source to use. ', default = 1)
-    parser.add_argument('--threshold', type=float, default=0.31,
+    parser.add_argument('--threshold', type=float, default=0.33,
                         help='classifier score threshold')
     args = parser.parse_args()
 
@@ -185,7 +185,7 @@ def main():
         print('--------------------------------------')
         print("Final resistance is ",final_resistance)
         resistance_array = resistance2array(final_resistance)
-        serial.write(bytes(resistance_array,'utf-8'))
+     #   serial.write(bytes(resistance_array,'utf-8'))
         cv2.imshow('frame', cv2_im)
         a= input("wait")
         if cv2.waitKey(1) & 0xFF == ord('q'):

@@ -183,9 +183,9 @@ def main():
             final_resistance = mode(computed_resistance)
         print('--------------------------------------')
         print("Final resistance is ",final_resistance)
-        # resistance_array = resistance2array(final_resistance)
-        #serial.write(bytes(resistance_array,'utf-8'))
-        # a= input("wait")
+        resistance_array = resistance2array(final_resistance)
+        serial.write(bytes(resistance_array,'utf-8'))
+        a= input("wait")
         if cv2.waitKey(1) & 0xFF == ord('q'):
             break
     cap.release()

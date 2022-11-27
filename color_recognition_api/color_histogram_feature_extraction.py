@@ -182,8 +182,8 @@ def training():
     for f in os.listdir('./training_dataset/gold'):
         color_histogram_of_training_image('./training_dataset/gold/' + f)
         
-    for f in os.listdir('./training_dataset/grey'):
-        color_histogram_of_training_image('./training_dataset/grey/' + f)	
+#    for f in os.listdir('./training_dataset/grey'):
+  #      color_histogram_of_training_image('./training_dataset/grey/' + f)	
 
     for f in os.listdir('./training_dataset/white'):
         color_histogram_of_training_image('./training_dataset/white/' + f)

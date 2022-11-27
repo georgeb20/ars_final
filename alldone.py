@@ -159,7 +159,7 @@ def main():
             cv2_im_rgb = cv2.resize(cv2_im_rgb, inference_size)
             run_inference(interpreter, cv2_im_rgb.tobytes())
             objs = get_objects(interpreter, args.threshold)
-            idxs = non_max_suppression(objs, .1)
+            idxs = non_max_suppression(objs, .05)
             print(len(objs))
             if(len(objs)>0):
                 new_objs=[]

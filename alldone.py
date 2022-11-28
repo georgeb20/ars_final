@@ -187,7 +187,7 @@ def main():
         print("Final resistance is ",final_resistance)
         resistance_array = resistance2array(final_resistance)
         serial.write(bytes(resistance_array,'utf-8'))
-        #cv2.imshow('frame', cv2_im)
+        cv2.imshow('frame', cv2_im)
 
         #a= input("wait")
         if cv2.waitKey(1) & 0xFF == ord('q'):
